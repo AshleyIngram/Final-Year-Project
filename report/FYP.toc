@@ -9,17 +9,17 @@
 \contentsline {subsection}{\numberline {2.1.1}Related Ideas}{3}
 \contentsline {subsubsection}{\numberline {2.1.1.1}Utility Computing}{3}
 \contentsline {subsubsection}{\numberline {2.1.1.2}Virtualisation}{3}
-\contentsline {section}{\numberline {2.2}Cloud Computing Service Models}{3}
+\contentsline {section}{\numberline {2.2}Cloud Computing Service Models}{4}
 \contentsline {subsection}{\numberline {2.2.1}Infrastructure as a Service}{4}
 \contentsline {subsection}{\numberline {2.2.2}Platform as a Service}{4}
 \contentsline {subsection}{\numberline {2.2.3}Software as a Service}{5}
-\contentsline {section}{\numberline {2.3}Cloud Computing Deployment Models}{5}
-\contentsline {section}{\numberline {2.4}Big Data}{5}
-\contentsline {section}{\numberline {2.5}MapReduce}{5}
-\contentsline {section}{\numberline {2.6}PACT}{5}
-\contentsline {section}{\numberline {2.7}Summary}{5}
-\contentsline {chapter}{\numberline {3}A Long but Boring Chapter}{6}
-\contentsline {chapter}{\hbox to\@tempdima { \hfil }Bibliography}{7}
-\contentsline {chapter}{\numberline {A}Personal Reflection}{8}
-\contentsline {chapter}{\numberline {B}Record of External Materials Used}{9}
-\contentsline {chapter}{\numberline {C}How Ethical Issues were Dealt With}{10}
+\contentsline {section}{\numberline {2.3}Cloud Computing Deployment Models}{6}
+\contentsline {section}{\numberline {2.4}Big Data}{6}
+\contentsline {section}{\numberline {2.5}MapReduce}{6}
+\contentsline {section}{\numberline {2.6}PACT}{6}
+\contentsline {section}{\numberline {2.7}Summary}{6}
+\contentsline {chapter}{\numberline {3}A Long but Boring Chapter}{7}
+\contentsline {chapter}{\hbox to\@tempdima { \hfil }Bibliography}{8}
+\contentsline {chapter}{\numberline {A}Personal Reflection}{9}
+\contentsline {chapter}{\numberline {B}Record of External Materials Used}{10}
+\contentsline {chapter}{\numberline {C}How Ethical Issues were Dealt With}{11}
