@@ -48,7 +48,7 @@ Problems that MapReduce are not suited to are typically iterative in nature, suc
 \subsubsection{A Real-World Problem}
 Whilst there is value in testing simple problems such as word counting for benchmarks, they are artificial and may not provide a reflection of how data processing tools are used in industry and academia. A real world problem will be used to determine how well the data processing tools perform in a more realistic scenario. As a real world scenario is likely to be more complex, it provides more of an opportunity to take advantage of different aspects of the data processing software. There is rarely one `correct' way of solving a non-trivial problem, and there will therefore hopefully be ways of solving the problem which allow for PACT and MapReduce solutions developed in an idiomatic way. 
 
-Various data sets are made publicly available. Amazon make 55 large datasets publicly available for analysis, including data from the 1000 Genomes Project (a map of human genetic variation), the NASA NEX project (various scientific datasets, including images of the Earth's surface and climate change projections) and US Census data.
+Various data sets are made publicly available. Amazon make 55 large datasets publicly available for analysis \cite{publicAmazonData}, including data from the 1000 Genomes Project (a map of human genetic variation), the NASA NEX project (various scientific datasets, including images of the Earth's surface and climate change projections) and US Census data.
 
 As an alternative, the School of Computing has a 40GB dataset with information on Google data centres. 
 
@@ -66,15 +66,15 @@ The experiments will all be run on the School of Computing cloud testbed, a priv
 The experiments will also be run on a public cloud, such as those provided by Amazon or Microsoft. In a public cloud environment, the hardware is not known and could be of varying quality. This will show whether designing Nephele to run on the cloud, and to take advantage of the elasticity and available resources, translates in to real world benefits.
 
 \section{Experiment Implementation}
-Experiments will be implemented using the Scala programming language. Scala has been chosen for the following reasons.
+Experiments will be implemented using the Scala programming language \cite{scalalang}. Scala has been chosen for the following reasons.
 
 \begin{itemize}
     \item All experiments should be implemented in the same programming language to maximise code reuse, and allow for easier comparison of implementations.
-    \item Nephele has limited support for programming languages, whereas Hadoop (as a more mature project) supports many more. Nephele currently only supports Java and Scala. The Scala API for Nephele currently has superior documentation.
+    \item Nephele has limited support for programming languages, whereas Hadoop (as a more mature project) supports many more. Nephele currently only supports Java and Scala \cite{stratosphereProgramming}. The Scala API for Nephele currently has superior documentation.
     \item Code examples illustrating Hadoop and Nephele tasks are substantially terser than the Java equivalents.
 \end{itemize}
 
-I have implemented common introductory Hadoop exercises using Scala and have executed them on a local emulator. These basic implementations use an Open Source Hadoop library provided by Twitter (called Scalding).
+I have implemented common introductory Hadoop exercises using Scala and have executed them on a local emulator. These basic implementations use an Open Source Hadoop library provided by Twitter (called Scalding) \cite{scalding}.
 
 I have received access to the School of Computing Cloud Testbed, and have carried out introductory exercises on provisioning Virtual Machines. There are currently some issues with the Hadoop Virtual Machine, but I hope these will be resolved in the near future so I can run tests in the environment the experiments will be executed in.
 
