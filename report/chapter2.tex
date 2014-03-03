@@ -84,9 +84,108 @@ A hybrid cloud is a composition of 2 other cloud types (public, private and comm
 It may be difficult to create a hybrid cloud in some situations as the technologies used may be complete distinct and difficult to combine. There may also be concerns about data security and privacy. Business rules may have to be defined which specify (for example) what types of data can be stored on a public cloud, and what types of data are too sensitive and must remain private at all costs. 
 
 \section{Big Data}
+The term `Big Data' refers to large scale data sets which present new problems for the processing and analysis of data. These datasets are often too large to be comfortably worked with using standard tools for statistical analysis \cite{snijders2012big}. Sources of Big Data are diverse; datasets can be from science, industry, social networking sites or various other sources. Consider the following:
+
+\begin{itemize}
+	\item In 2011, Facebook had 30 PetaBytes of data used for performing analytics \cite{facebookBigData}.
+	\item The Large Hadron Collider generates ~25 PetaBytes of data annually \cite{lhcData}.
+	\item Phase one of the 1000 Genome Project has a dataset of 180 TeraBytes of human genetic information \cite{genomeData}.
+	\item In 2008, Google were capable of processing 20 PetaBytes of data a day \cite{dean2008mapreduce}.
+\end{itemize}
+
+\subsection{Challenges}
+Big Data introduces several challenges which make the use of traditional analysis tools and techniques infeasible.
+
+\subsubsection{Scale}
+The defining characteristic of Big Data problems is their massive scale. Typical problems may require processing datasets in the magnitude of PetaBytes of information. This makes it unrealistic to process the data in serial, as it would take far too long. Data processing techniques designed for Big Data problems must process information in parallel. 
+
+The scale of the data also makes storing data on a single machine unrealistic. Whilst the capacity of hard drives has been increasing over time, the speed of I/O has not increased by the same factor \cite{white2009hadoop}. This makes it time consuming to read an entire dataset off of one physical disk, even if a disk exists with enough capacity. 
+
+Unfortunately, the alternative approach of distributing data across multiple machines also has issues. Using a higher number of nodes increases the likelihood that one of those nodes will fail, which could lead to irrecoverable data loss. In order to prevent this, systems for processing Big Data should be designed to be fault tolerant, usually by introducing redundancy.
+
+\subsubsection{Predictability}
+Not all Big Data is static. There has been increasing interest in performing sentiment analysis on social networks to predict the results of real-world events such as box office revenues \cite{asur2010predicting}, financial markets \cite{bollen2011twitter}, or surveys on political opinion \cite{o2010tweets}. 
+
+It can be difficult to predict the quantity of data which may need to be processed when analysing real-time data, such as that gathered by Twitter. In August 2013 Twitter experienced an unexpected increase in traffic, leading to a new record for the number of tweets in a second. This highlights the potentially unpredictable nature of real-time data analytics. 
+
+The challenges of predicting resources required for real time data analytics show the advantage of using Cloud Computing for data processing. The elastic nature of clouds would allow resources to be dynamically acquired when an unpredictable increase in data occurs. 
+
+\subsubsection{Data Heterogeneity}
+It is very rare for different data sources represent data in the same way. Where data is processed from multiple sources, the lack of standard methods of storing data can make it difficult to develop accurate processing techniques \cite{cuzzocrea2011analytics}. 
+
+A lack of structure in data can also cause problems with analysis. Much of the data used in large scale processing is strongly unstructured (social network data, text from articles, etc) which can cause issues with processing techniques. For example a simple data processing task which counts the frequency of words in a text document may produce inaccurate results if there are spelling mistakes in the corpus. 
 
 \section{MapReduce}
+MapReduce is a programming paradigm designed as a generalised solution to processing large scale datasets \cite{dean2004mapreduce}. A programmer specifies both a \textit{map} and \textit{reduce} function, a set of input data, and a location for the output. A MapReduce runtime  determines how to distribute the task, taking the data and dispersing it amongst its nodes, enabling the data to be processed in parallel.
 
+The key advantage of MapReduce is that it provides an abstraction on top of concurrent programming. This allows a developer to specify what they want to do to the data (in terms of the \textit{map} and \textit{reduce} functions) without having the obscuring the code and having the cognitive overhead of handling common concurrency issues, such as fault tolerance, data distribution, and safe parallelism without the risk of problems such as race conditions and deadlocks. 
+
+The MapReduce method of performing distributed parallel data processing is inspired by the \textit{map} and \textit{reduce} functions present in many functional programming languages \cite{dean2004mapreduce}. 
+
+\subsection{Map}
+The first function that a developer provides is the \textit{map} function.
+
+$$ map = (k, v) \rightarrow list(k^{\prime}, v^{\prime}) $$
+
+The \textit{map} function receives a key and a value as input (an \textit{Input Pair}), and returns a list of (different) keys and values (a list of \textit{Output Pairs}. The MapReduce runtime will take all output pairs with the same key, and combine them in to a list before passing the resulting values to the \textit{reduce} function. The reduce function therefore receives an argument of type $ (k, list(v)) $.
+
+\subsection{Reduce}
+The \textit{reduce} function is the second function provided by the developer. 
+
+$$ reduce = (k, list(v)) \rightarrow list(v^{\prime}) $$
+
+A \textit{reduce} function merges values together to produce a smaller list of values. Typically, the reduce function is an aggregate function, returning either 1 or 0 results (such as sum, average, etc). 
+
+\subsection{Word Counting Example}
+A common MapReduce operation is word counting. The following pseudo-code implementation of the \textit{map} and \textit{reduce} functions for counting words in a document obtained from \cite{dean2004mapreduce}.
+
+\begin{algorithm}
+\caption{Map function for word counting}
+	\begin{algorithmic}
+		\REQUIRE key: document name
+		\REQUIRE value: document contents
+
+		\FORALL{w in value}
+			\STATE EmitIntermediate(w, 1)
+		\ENDFOR
+	\end{algorithmic}
+\end{algorithm}
+
+The \textit{map} function takes a document, and returns a number of key value pairs, where the key is a word appearing in the document, and the value is 1. The runtime environment will then cluster the values together where the keys match. Each word will therefore have a list of 1's, with the length of the list indicating how many times the word has occurred.
+
+\begin{algorithm}[H]
+\caption{Reduce function for word counting}
+	\begin{algorithmic}
+		\REQUIRE key: a word
+		\REQUIRE value: a list of counts
+		\STATE result = 0
+		\FORALL {v in values}
+			\STATE result += v
+		\ENDFOR
+		\RETURN result
+	\end{algorithmic}
+\end{algorithm}
+
+The reduce function takes the list of values (all of which are 1) and sums them together. This gives a total number of times the word has occurred in the document.
+
+\subsection{Disadvantages}
+The primary criticism of MapReduce is that it provides a limited programming framework \cite{zaharia2010spark}. Whilst the MapReduce paradigm is a relatively general concept which applies to many types of application, not all problems can be formulated in a way which is compatible with MapReduce. The MapReduce process consists of a static \textit{map} operation, performed across the data, and a static \textit{reduce} operation performed subsequently. The \textit{map} and \textit{reduce} functions are both stateless. 
+
+This imposes limitations on the types of problem which can be solved by MapReduce. If it is not possible to formulate a \textit{map} and \textit{reduce} function for a problem, it cannot be solved by the MapReduce paradigm. Alternatively, whilst it may be possible to express a data processing task in terms of \textit{map} and \textit{reduce}, it does not always provide the most fluent or efficient method of solving the problem. 
+
+Prominent examples of this type of algorithm can be found in Machine Learning, where problems are often iterative in nature. Iterative tasks, such as K-Means Clustering can be implemented using the MapReduce paradigm \cite{zhao2009parallel}, but often require multiple passes of the \textit{map} and \textit{reduce} functions, which causes a significant performance penalty as data must be loaded from the disk every iteration.
+
+\subsection{Hadoop}
+Hadoop is an Open Source implementation of the MapReduce programming paradigm \cite{hadoop}. It consists of several modules designed to overcome the problems associated with large scale data processing. In addition to the MapReduce programming model (Hadoop MapReduce), the Hadoop platform also has a distributed file system (HDFS) and a resource management and scheduling component (Hadoop YARN). 
+
+Hadoop is a particularly popular implementation of the MapReduce interface in the data processing community, emerging as the de-facto standard implementation of MapReduce \cite{qin2013reflection}.
 \section{PACT}
+
+\subsection{Nephele}
+
+\section{Alternative Technologies}
+
+\subsection{Google MapReduce}
+\subsection{Dryad}
 
 \section{Summary}
