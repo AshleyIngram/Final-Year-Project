@@ -151,7 +151,7 @@ A common MapReduce operation is word counting. The following pseudo-code impleme
 	\end{algorithmic}
 \end{algorithm}
 
-The \textit{map} function takes a document, and returns a number of key value pairs, where the key is a word appearing in the document, and the value is 1. The runtime environment will then cluster the values together where the keys match. Each word will therefore have a list of 1's, with the length of the list indicating how many times the word has occurred.
+The \textit{map} function takes a document, and returns a number of key/value pairs, where the key is a word appearing in the document, and the value is 1. The runtime environment will then cluster the values together where the keys match. Each word will therefore have a list of 1's, with the length of the list indicating how many times the word has occurred.
 
 \begin{algorithm}[H]
 \caption{Reduce function for word counting}
@@ -179,7 +179,46 @@ Prominent examples of this type of algorithm can be found in Machine Learning, w
 Hadoop is an Open Source implementation of the MapReduce programming paradigm \cite{hadoop}. It consists of several modules designed to overcome the problems associated with large scale data processing. In addition to the MapReduce programming model (Hadoop MapReduce), the Hadoop platform also has a distributed file system (HDFS) and a resource management and scheduling component (Hadoop YARN). 
 
 Hadoop is a particularly popular implementation of the MapReduce interface in the data processing community, emerging as the de-facto standard implementation of MapReduce \cite{qin2013reflection}.
-\section{PACT}
+
+\section{PACTs}
+\textbf{Pa}rallelization \textbf{C}ontrac\textbf{t}s (PACTs) is an alternative programming paradigm which is a generalization of the MapReduce concept \cite{battre2010socc}. The aim of PACT is to overcome the perceived weaknesses in the MapReduce paradigm, whilst still providing a generic enough framework to represent any data processing task. PACT sets out to improve MapReduce by observing that the \textit{map} and \textit{reduce} functions alone cannot represent all data processing tasks in a natural or efficient way, that MapReduce does not provide flexibility in the order of operations (strictly a \textit{map} followed by a \textit{reduce}) and that MapReduce makes no assumption about the user defined functions, limiting the scope of potential optimizations.
+
+PACT aims to solve these issues in 2 ways. It introduces the concept of Parallelization Contracts, which define properties of a user defined functions input and output data, and it represents the data flow of a data processing task as a Directed Acyclic Graph (DAG), rather than strictly as a \textit{map} and \textit{reduce} task.
+ 
+\subsection{Parallelization Contracts}
+Parallelization Contracts define properties of the input and output data that a user defined function expects. The PACT runtime can use these properties to determine how the data processing task should be parallelized and distributed across nodes. There are 2 types of Parallelization Contract.
+
+\subsubsection{Input Contracts}
+Input Contracts are second-order functions which describe properties about the input data. The PACT runtime uses the Input Contracts to subdivide a problem in to a set of Parallelization Units (PUs). A PU is a core block of computation which must be performed by one node, in serial. A set of PUs can be run in parallel.  
+
+\textit{Map} and \textit{Reduce} are both examples of input contracts. PACT provides several additional input contracts.
+
+\begin{itemize}
+	\item \textbf{Map} takes a list of records and applies a user defined function to every record individually, in parallel. Map operations are typically used for transforming data into another form, or filtering operations.
+	\item \textbf{Reduce} takes a list of records, groups values with the same key together, and applies a function to the resulting subsets in parallel. The reduce operator can be used to perform aggregations, such as sum or average.
+	\item \textbf{Join} takes 2 lists of records as input. It matches records from the first list with the second list based on whether they have the same key. The user function is provided with a record from each of the input lists. The Join operation can be used to implement an equi-join.  
+	\item \textbf{Cross} takes 2 lists of records and takes their Cartesian product. The user defined function is then applied to each element of the resulting Cartesian product.
+	\item \textbf{CoGroup} takes 2 lists of records, and groups them by key. The user function receives a list of records from both input lists, all with the same key. This is similar to the reduce operation, but is applied over 2 input lists, rather than 1.
+\end{itemize}
+
+\subsubsection{Output Contracts}
+An Output Contract is an optional component of a data processing step. An Output Contract is used to provide guarentees about the type of data that the user function will return. This allows the PACT runtime to optimise the process to make a more efficient data flow. An Output Contract can indicate that data does not have to be repartitioned between nodes before going on to the next stage in the data processing. 
+
+There are various Output Contracts.
+
+\begin{itemize}
+	\item \textbf{Same-Key} ensures that each record generated by the user defined function has the same key as its input. This ensures that any partitioning between nodes can be kept for the next stage of processing.
+	\item \textbf{Super-Key} provides a super-key of the records it was generated from. A function with the Super-Key output contract allows partitioning between nodes to be kept the same.
+	\item \textbf{Unique-Key} gives each record a globally unique key across all nodes. This allows records to be stored in data sources which require globally unique keys (e.g. in a relational database table with a primary key).
+	\item \textbf{Partitioned-By-Key} partitions records by their key. This has similar implications to the Super-Key contract, in that partitioning is kept, but there is no order within the partitions.
+\end{itemize}
+ 
+\subsection{Directed Acyclic Graph}
+Data Processing jobs are represented as Directed Acyclic Graphs \cite{warneke2009nephele}. A vertex in the graph represents an individual task (a combination of an input contract, a user defined function, and optionally an output contract). Edges represent the communication between different tasks. Tasks can be connected to multiple other tasks. 
+
+The primary advantage of a DAG is that it allows for a more flexible representation of data processing tasks, allowing complex workflows of tasks, rather than being limited to a map task, followed by a reduce task. This allows more complex data processing jobs to be completed. 
+
+Directed Acyclic Graphs can also be composed together, by connecting the output of one graph to the input of the next.
 
 \subsection{Nephele}
 
