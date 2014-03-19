@@ -43,6 +43,7 @@ object SequenceFileGenerator {
     val value = new Text()
     value.set(scala.io.Source.fromFile(file).getLines().mkString)
     writer.append(key, value)
+    writer.sync()
     writer
   }
 
@@ -83,5 +84,6 @@ object SequenceFileGenerator {
 
     val files = getHtmlFiles(new File(input))
     files.zipWithIndex.foreach(write(_, files.length))
-  }
+    writer.close() 
+ }
 }
