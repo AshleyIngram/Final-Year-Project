@@ -6,8 +6,10 @@ import com.twitter.scalding._
 
 class WordCount(args: Args) extends Job(args)
 {
-    TextLine(args("input"))
-        .flatMap('line -> 'word) { line:String => line.split("""\s+""") }
-        .groupBy('word) { _.size }
-        .write(Tsv(args("output")))
+   val source = WritableSequenceFile(args("input"), ('key, 'value))
+  
+   source.read
+         .flatMap('value -> 'word) { line:String => line.split("""\s+""") }
+         .groupBy('word) { _.size }
+         .write(Tsv(args("output")))
 }
