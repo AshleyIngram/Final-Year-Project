@@ -1,5 +1,3 @@
-  UW PICO 5.07                        File: build.sbt                           
-
 import AssemblyKeys._
 seq(assemblySettings: _*)
 
