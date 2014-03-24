@@ -1,3 +1,7 @@
+import AssemblyKeys._
+
+seq(assemblySettings: _*)
+
 name := "Core"
 
 version := "1.0"
