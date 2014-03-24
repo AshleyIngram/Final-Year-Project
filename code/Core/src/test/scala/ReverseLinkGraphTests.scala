@@ -12,21 +12,21 @@ class ReverseLinkGraphTests extends FlatSpec with Matchers {
 
   it should "return correct address with basic link" in {
     val text = "<a href=\"foo.htm\">"
-    val results = ReverseLinkGraph.findLinkDestinations(text)
+    val results = ReverseLinkGraph.findLinkDestinations(text).toList
     results.length should be (1)
     results(0) should be ("foo.htm")
   }
 
   it should "return correct address with link with other attributes" in {
     val text = """<a href="foo.htm" class="bar">"""
-    val results = ReverseLinkGraph.findLinkDestinations(text)
+    val results = ReverseLinkGraph.findLinkDestinations(text).toList
     results.length should be (1)
     results(0) should be ("foo.htm")
   }
 
   it should "return correct address in nested html fragment" in {
     val text = """<div class="container"><a href="foo.htm">Hello World!</a></div>"""
-    val results = ReverseLinkGraph.findLinkDestinations(text)
+    val results = ReverseLinkGraph.findLinkDestinations(text).toList
     results.length should be (1)
     results(0) should be ("foo.htm")
   }
@@ -38,7 +38,7 @@ class ReverseLinkGraphTests extends FlatSpec with Matchers {
         | <a href="bar.htm">Hello World!</a>
         | </div>"""
 
-    val results = ReverseLinkGraph.findLinkDestinations(text)
+    val results = ReverseLinkGraph.findLinkDestinations(text).toList
     results.length should be (2)
     results(0) should be ("foo.htm")
     results(1) should be ("bar.htm")
@@ -280,7 +280,7 @@ class ReverseLinkGraphTests extends FlatSpec with Matchers {
                  |</html>
                  |"""
 
-    val results = ReverseLinkGraph.findLinkDestinations(text)
+    val results = ReverseLinkGraph.findLinkDestinations(text).toList
     results.length should be (65)
   }
 }

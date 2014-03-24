@@ -15,15 +15,14 @@ object ReverseLinkGraph {
    * @param value The text of the article being processed
    * @return A tuple for each link (Link Destination, Link Source)
    */
-  def map(key: String, value: String): List[(String, String)] = {
+  def map(key: String, value: String): Iterable[(String, String)] = {
     val addresses = findLinkDestinations(value)
-    addresses.map(a => (a, key)).toList
+    addresses.map(a => (a, key))
   }
 
-  def findLinkDestinations(html: String): List[String] = {
+  def findLinkDestinations(html: String): Iterable[String] = {
     val links = Jsoup.parse(html).select("a[href]").iterator().toList
-    val articles = links.map(l => l.attr("href").split("/").last)
-    articles.toList
+    links.map(l => l.attr("href").split("/").last)
   }
 
   /**
