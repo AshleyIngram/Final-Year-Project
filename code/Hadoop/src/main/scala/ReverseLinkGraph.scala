@@ -1,6 +1,8 @@
 /**
  * Find Reverse Link Graph using Hadoop
  */
+package AshleyIngram.FYP.Hadoop
+
 import com.nicta.scoobi.Scoobi._
 import org.apache.hadoop.io.Text
 import AshleyIngram.FYP.Core
