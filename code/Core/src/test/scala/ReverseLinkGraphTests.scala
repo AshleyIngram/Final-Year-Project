@@ -1,12 +1,15 @@
 /**
  * Test Core Reverse Link Graph code
  */
+package AshleyIngram.FYP.Core.Tests
+
+import AshleyIngram.FYP.Core.ReverseLinkGraph
 import org.scalatest._
 
 class ReverseLinkGraphTests extends FlatSpec with Matchers {
   it should "return an empty list if there's no a tags" in {
     val text = "Hello World"
-    val results = ReverseLinkGraph.findLinkDestinations(text)
+    val results = ReverseLinkGraph.findLinkDestinations(text).toList
     results.length should be (0)
   }
 

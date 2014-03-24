@@ -2,6 +2,8 @@
  * Core code designed to calculate a Reverse Link Graph using
  * the MapReduce paradigm
  */
+package AshleyIngram.FYP.Core
+
 import org.jsoup.Jsoup
 import scala.collection.JavaConversions._
 
