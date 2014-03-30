@@ -60,8 +60,8 @@
 \pagenumbering{roman}    % Set up page numbering
 \setcounter{page}{1}
 
-%\include{summary}        % Summary
-%\include{acknowledge}    % Acknowledgements
+\include{summary}        % Summary
+\include{acknowledge}    % Acknowledgements
 \tableofcontents
 \newpage
 
@@ -71,14 +71,16 @@
 \include{chapter1}       % include the chapters
 \include{chapter2}
 \include{chapter3}
+\include{chapter4}
+\include{chapter5}
 
 \addcontentsline{toc}{chapter}{\numberline { }Bibliography}
 \bibliographystyle{plain}
 \bibliography{refs}      % include the bibliography
 
 \appendix                % include the appendices
-%\include{appendixa}
-%\include{appendixb}
+\include{appendixa}
+\include{appendixb}
 \include{appendixc}
 
 \end{document}
