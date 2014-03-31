@@ -1,1 +1,50 @@
 \chapter{Experiment Design}
+A series of experiments have been designed in order to objectively analyse the efficiency of Nephele and Hadoop. This section discusses the design of the experiments in regards to the aims of the project.
+
+Experiments are designed in a modular fashion, enabling a subset of them to be completed whilst still providing relevant research results. This approach was taken to limit the risk that is introduced by the time constraints of the project. 
+
+\section{Experiment Variables}
+There are a total of 18 experiments with 3 varying factors, in order to test the data processing tools in a range of relevant scenarios. 
+
+\subsection{Data Processing Tools}
+The first factor that will be varied is the tool used to process the data. This relates to the first two research goals: providing a comparison of the MapReduce and PACT programming paradigms, and ascertaining how well Nephele can perform MapReduce tasks.
+
+\subsubsection{Hadoop}
+Hadoop is an open source implementation of the MapReduce paradigm, which has become the de-facto standard for big data processing \cite{qin2013reflection}. This makes it an ideal choice for comparing MapReduce and PACT.
+
+Experiments will be run in Hadoop to provide an indication of the efficiency for the current state of the art in data processing. This provides a reference point to which alternative data processing technologies can be compared. 
+
+\subsubsection{Nephele (PACT)}
+Nephele is a tool which implements the PACT programming paradigm, which as a superset of MapReduce can also perform tasks in a MapReduce style. This means that experiments can be implemented using the same tool, but in different programming paradigms, allowing a fair test of PACT vs Nephele. This is designed to answer the first research question, namely whether or not PACT overcomes the inherent disadvantages of the MapReduce paradigm.
+
+In a broader sense, it allows a complete comparison of Hadoop and Nephele. In real-world data processing scenarios, users of Nephele would be unlikely to restrict their programming options to just MapReduce, and would be likely to use other aspects of PACT as appropriate. Running experiments in the same way allows a fairer comparison of the 2 tools, where all of their functionality is available.
+
+\subsubsection{Nephele (MapReduce)}
+Experiments will also be run using just the Map and Reduce operations of Nephele. Whilst Nephele has a wider set of operations, solving data processing tasks using just Map and Reduce allows Nephele and Hadoop to be directly compared, aiming to answer the second research question. If Nephele can perform MapReduce tasks with comparable efficiency to Hadoop, it will indicate that Nephele is a more efficient tool for large-scale data processing in general, not just for those situations where a problem cannot be formulated in terms of MapReduce.
+
+\subsection{Data Processing Task}
+
+\subsubsection{Classic MapReduce Problem}
+% Reverse Link Graph
+
+\subsubsection{Non-Classic MapReduce Problem}
+% Machine Learning, etc
+
+\subsubsection{Real-World Problem}
+
+\subsection{Deployment Environment}
+
+\subsubsection{Private Cloud}
+
+\subsubsection{Public Cloud}
+
+\section{Measurements}
+
+\subsection{Runtime}
+
+\subsection{Scalability}
+
+\subsection{Alternative Measurements}
+% Cost, Resource Utilisation, etc?
+
+\section{Hypothesis}
