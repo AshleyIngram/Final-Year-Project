@@ -41,9 +41,11 @@ object SequenceFileGenerator {
     val key = new Text()
     key.set(file.getName)
     val value = new Text()
-    value.set(scala.io.Source.fromFile(file).getLines().mkString)
+    val fileHandle = scala.io.Source.fromFile(file)
+    value.set(fileHandle.getLines().mkString)
     writer.append(key, value)
     writer.sync()
+    fileHandle.close()
   }
 
   /**
