@@ -37,14 +37,35 @@ object SequenceFileGenerator {
    * @param writer The writer to write to the SequenceFile
    * @return Updated SequenceWriter
    */
-  def writeToSequenceFile(file: File, writer: SequenceFile.Writer): SequenceFile.Writer = {
+  def writeToSequenceFile(file: File, writer: SequenceFile.Writer) = {
     val key = new Text()
     key.set(file.getName)
     val value = new Text()
     value.set(scala.io.Source.fromFile(file).getLines().mkString)
     writer.append(key, value)
     writer.sync()
-    writer
+  }
+
+  /**
+   * Measure the progress of a method (with 1 parameter)
+   * @param tuple A tuple of (Method Parameter, Index of item)
+   * @param total The total number of items in the list being processed
+   * @param method The method to call/track progress of
+   * @tparam T The type of the argument passed to method
+   */
+  def progress[T](tuple: (T, Int), total: Int, method: Function[T, Unit]) = {
+    val f = tuple._1
+    val i = tuple._2
+
+    method(f)
+
+    val getPercent = (x: Int, y: Int) => (x.toFloat / y) * 100
+    val percent = getPercent(i, total)
+    val lastPercent = getPercent(i-1, total)
+
+    if (percent - lastPercent > 1) {
+      System.out.println(percent.toString + "% complete")
+    }
   }
 
   /**
@@ -65,25 +86,8 @@ object SequenceFileGenerator {
       classOf[Text],
       classOf[Text])
 
-    // Close over the sequence writer, so we're writing to the
-    // stream returned by the last writeToSequenceFile
-    def write(tuple: (File, Int), total: Int) = {
-      val f = tuple._1
-      val i = tuple._2
-
-      writeToSequenceFile(f, writer)
-
-      val getPercent = (x: Int, y: Int) => (x / y) * 100
-      val percent = getPercent(i, total)
-      val lastPercent = getPercent(i-1, total)
-
-      if (percent - lastPercent > 1) {
-        System.out.println(percent.toString + "% complete")
-      }
-    }
-
     val files = getHtmlFiles(new File(input))
-    files.zipWithIndex.foreach(write(_, files.length))
+    files.zipWithIndex.foreach(progress[File](_, files.length, writeToSequenceFile(_, writer)))
     writer.close() 
  }
 }
