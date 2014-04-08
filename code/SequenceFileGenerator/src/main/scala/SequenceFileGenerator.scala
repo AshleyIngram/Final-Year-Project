@@ -61,11 +61,7 @@ object SequenceFileGenerator {
 
     val getPercent = (x: Int, y: Int) => (x.toFloat / y) * 100
     val percent = getPercent(i, total)
-    val lastPercent = getPercent(i-1, total)
-
-    if (percent - lastPercent > 1) {
-      System.out.println(percent.toString + "% complete")
-    }
+    System.out.println(percent.toString + "% complete")
   }
 
   /**
