@@ -24,7 +24,8 @@ object ReverseLinkGraph {
     val output = result.write(out, CsvOutputFormat())
     val plan = new ScalaPlan(Seq(output))
 
-    val executor = new RemoteExecutor(jobManagerIp, jobManagerPort, jarFile)
-    executor.executePlan(plan)
+    // val executor = new RemoteExecutor(jobManagerIp, jobManagerPort, jarFile)
+    // executor.execute(plan)
+    System.out.println(LocalExecutor.execute(plan))
   }
 }

@@ -2,13 +2,11 @@ import AssemblyKeys._
 
 seq(assemblySettings: _*)
 
-name := "Nephele"
+name := "NepheleFileConvertor"
 
 version := "1.0"
 
-libraryDependencies += "eu.stratosphere" % "stratosphere-clients" % "0.4"
-
-libraryDependencies += "eu.stratosphere" % "stratosphere-scala" % "0.4"
+libraryDependencies += "com.github.tototoshi" % "scala-csv_2.10" % "1.0.0"
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
 {
