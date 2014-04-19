@@ -12,9 +12,9 @@ object ReverseLinkGraph {
   def main(args: Array[String]) {
     val in = args(0)
     val out = args(1)
-    val jobManagerIp = args(2)
-    val jobManagerPort = args(3).toInt
-    val jarFile = args(4)
+   // val jobManagerIp = args(2)
+   // val jobManagerPort = args(3).toInt
+   //  val jarFile = args(4)
 
     // val input = DataSource(in, BinarySerializedInputFormat[(String, String)]())
     val input = DataSource(in, CsvInputFormat[(String, String)]())
