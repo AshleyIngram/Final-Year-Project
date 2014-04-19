@@ -4,7 +4,7 @@ A series of experiments have been designed in order to objectively analyse the e
 Experiments are designed in a modular fashion, enabling a subset of them to be completed whilst still providing relevant research results. This approach was taken to limit the risk that is introduced by the time constraints of the project. 
 
 \section{Experiment Variables}
-There are a total of 18 experiments with 3 varying factors, in order to test the data processing tools in a range of relevant scenarios. 
+There are a total of 30 experiments with 3 varying factors, in order to test the data processing tools in a range of relevant scenarios. 
 
 \subsection{Data Processing Tools}
 The first factor that will be varied is the tool used to process the data. This relates to the first two research goals: providing a comparison of the MapReduce and PACT programming paradigms, and ascertaining how well Nephele can perform MapReduce tasks.
@@ -23,20 +23,24 @@ In a broader sense, it allows a complete comparison of Hadoop and Nephele. In re
 Experiments will also be run using just the Map and Reduce operations of Nephele. Whilst Nephele has a wider set of operations, solving data processing tasks using just Map and Reduce allows Nephele and Hadoop to be directly compared, aiming to answer the second research question. If Nephele can perform MapReduce tasks with comparable efficiency to Hadoop, it will indicate that Nephele is a more efficient tool for large-scale data processing in general, not just for those situations where a problem cannot be formulated in terms of MapReduce.
 
 \subsection{Data Processing Task}
+The second varying factor will be the data processing task that the tools have to complete. The tasks have been chosen to represent real-world issues as closely as possible, to give an indication of performance in scenarios where the tools are likely to be used, rather than having synthetic benchmarks such as word counting or Terasort. 
 
 \subsubsection{Classic MapReduce Problem}
-% Reverse Link Graph
+A `classic' MapReduce problem is a problem which can easily be formulated in terms of MapReduce. Classic MapReduce problems tend to be stateless, and do not depend on other parts of the data. This makes it easier to compute the solution in parallel, but means that many problems are not well suited to MapReduce (such as naturally iterative problems). An example of a classic MapReduce problem would be Word Counting, as each document can be processed in parallel. 
+
+A Classic MapReduce problem has been chosen in order to measure how effective both Hadoop and Nephele are at processing data using the MapReduce paradigm. This specifically relates to the second research question (``How well does Nephele perform MapReduce tasks?''). 
+
+The specific classic MapReduce problem chosen is generating a Reverse Link Graph \cite{dean2008mapreduce}. In some situations, finding the transpose of a directed graph can be difficult. For example, when considering the Web Graph; it is relatively trivial to find the edges coming out of a vertex (as the hyperlinks on a page indicate its outgoing edges), but it is far more difficult to find incoming edges (pages which link to the current page). 
+
+Finding a reverse link graph of the web is a key component in many search engines \cite{page1999pagerank} where backlinks are used to indicate how important a page is, and can also be used to analyse a network of academic articles by treating references as edges \cite{garfield2002algorithmic}. 
 
 \subsubsection{Non-Classic MapReduce Problem}
 % Machine Learning, etc
 
-\subsubsection{Real-World Problem}
+\subsection{Cluster Size}
+The size of the cluster will be varied in order to give an indication of how well the data processing technologies perform at scale. This is a key factor in processing large scale data, as technologies which do not scale well as machines are added are unlikely to perform well in real-world scenarios, where the size of data may run into the Petabytes.
 
-\subsection{Deployment Environment}
-
-\subsubsection{Private Cloud}
-
-\subsubsection{Public Cloud}
+The elasticity of the Cloud will be required to scale the size of the cluster for different experiments. Specifically, experiments will be run using 2, 4, 6, 8 and 10 nodes. Scaling the size of the cluster will test both the scalability of the data processing tools, and the ability for the tools to harness the elasticity of the cloud, meeting the third research aim.
 
 \section{Measurements}
 
