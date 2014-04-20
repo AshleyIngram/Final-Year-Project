@@ -1,9 +1,11 @@
 import java.io.File
+import java.nio.charset.CodingErrorAction
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.SequenceFile
 import org.apache.hadoop.io.Text
+import scala.io.Codec
 
 /**
  * Script to convert a nested structure of small files in to one Sequence File
@@ -41,6 +43,12 @@ object SequenceFileGenerator {
     val key = new Text()
     key.set(file.getName)
     val value = new Text()
+
+    // Handle any non-recognized characters (they don't matter for the purposes of the experiment)
+    implicit val codec = Codec("UTF-8")
+    codec.onMalformedInput(CodingErrorAction.REPLACE)
+    codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
+
     val fileHandle = scala.io.Source.fromFile(file)
     value.set(fileHandle.getLines().mkString)
     writer.append(key, value)
