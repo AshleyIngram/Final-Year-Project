@@ -1,4 +1,4 @@
-package AshleyIngram.FYP.Nephele;
+package AshleyIngram.FYP.Nephele.ReverseLinkGraph;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -76,14 +76,13 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
         @Override
         public void reduce(Iterator<Record> records, Collector<Record> out) throws Exception {
             Record element = null;
-            StringValue result = new StringValue("");
+            StringValue result = "";
 
             while (records.hasNext()) {
                 element = records.next();
-                result.append(", ").append(element.getField(1, StringValue.class).getValue());
+                result.append(element.getFieldInto(1, StringValue.class).getValue();
             }
 
-            element.setField(1, result);
             out.collect(element);
         }
 
@@ -104,18 +103,18 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
         String output    = (args.length > 2 ? args[2] : "");
 
 
-        HadoopDataSource source = new HadoopDataSource(new SequenceFileInputFormat<Text, Text>(), new JobConf(), "Input Data");
+        HadoopDataSource source = new HadoopDataSource(new SequenceFileInputFormat<Text, Text>(), new JobConf(), "Input Lines");
         TextInputFormat.addInputPath(source.getJobConf(), new Path(dataInput));
 
-        MapOperator mapper = MapOperator.builder(new GetLinkPairs())
+        MapOperator mapper = MapOperator.builder(new TokenizeLine())
                 .input(source)
                 .name("Get Link Pairs")
                 .build();
-        ReduceOperator reducer = ReduceOperator.builder(GroupByKey.class, StringValue.class, 0)
+        ReduceOperator reducer = ReduceOperator.builder(CountWords.class, StringValue.class, 0)
                 .input(mapper)
                 .name("Group by Key")
                 .build();
-        FileDataSink out = new FileDataSink(new CsvOutputFormat(), output, reducer, "Reverse Link Graph");
+        FileDataSink out = new FileDataSink(new CsvOutputFormat(), output, reducer, "Word Counts");
         CsvOutputFormat.configureRecordFormat(out)
                 .recordDelimiter('\n')
                 .fieldDelimiter(' ')
@@ -144,8 +143,10 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
 
         Plan plan = rlg.getPlan(args);
 
+        // This will execute the word-count embedded in a local context. replace this line by the commented
+        // succeeding line to send the job to a local installation or to a cluster for execution
         LocalExecutor.execute(plan);
-		////PlanExecutor ex = new RemoteExecutor("localhost", 6123, "target/pact-examples-0.4-SNAPSHOT-WordCount.jar");
-		////ex.executePlan(plan);
+//		PlanExecutor ex = new RemoteExecutor("localhost", 6123, "target/pact-examples-0.4-SNAPSHOT-WordCount.jar");
+//		ex.executePlan(plan);
     }
 }
