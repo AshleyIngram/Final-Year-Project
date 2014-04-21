@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nicta.scoobi.examples
+package AshleyIngram.FYP.Hadoop
 
 import com.nicta.scoobi.Scoobi._
+import scala.annotation.tailrec
+import org.apache.hadoop.io.Text
+import AshleyIngram.FYP.Core
 
 object PageRank extends ScoobiApp with PageRank {
 
   def run() {
-    val names = args(0)
-    val graph = args(1)
-    val output = args(2) + "/pr/"
+    val input = args(0)
+    val output = args(1)
 
-    val urls = fromDelimitedTextFile(names) { case AnInt(id) :: url :: _ => (id, url) }
+    val data: DList[(Text, Text)] = fromSequenceFile[Text, Text](args(0))
+
+    // Get ReverseLinkGraph for use in PageRank
+    val result: DList[(String, Iterable[String])] = data.mapFlatten[(String, String)](in => Core.ReverseLinkGraph.map(in._1.toString(), in._2.toString))
+      .groupByKey
+
+    // Take the article title as the key (twice because key and value are the same, rather
+    // than having a numerical ID key and a string article name value)
+    val urls = result.keys.map(k => (k, k))
+
+    // Graph is the reverse link graph, with each page boxed into a Vertex
+    val graph = result.map(r => new Vertex(r._1, r._2.toSeq))
+
     persist(getPageRanks(urls, graph).toDelimitedTextFile(output + "result"))
   }
 }
@@ -32,16 +46,16 @@ object PageRank extends ScoobiApp with PageRank {
 /**
  * This trait computes the page rank of a graph of pages
  */
-trait PageRank extends NictaSimpleJobs {
+trait PageRank {
   val Node = """^(\d+): (.*)$""".r
 
-  /** a Vertice is described as a page id and a list of incoming links */
-  type Vertice[K] = (K, Seq[K])
+  /** a Vertex is described as a page id and a list of incoming links */
+  type Vertex[K] = (K, Seq[K])
   /** a Graph is described as a list of vertices */
-  type Graph[K] = DList[Vertice[K]]
+  type Graph[K] = DList[Vertex[K]]
   /** a Score is: the current page rank, the previous page rank and the list of incoming links */
   type Score[K] =  (Float, Float, Seq[K])
-  /** a Ranking is the association of: a vertice and a score */
+  /** a Ranking is the association of: a vertex and a score */
   type Ranking[K] = (K, Score[K])
   /** list of Rankings */
   type Rankings[K] = DList[Ranking[K]]
@@ -52,15 +66,15 @@ trait PageRank extends NictaSimpleJobs {
   }
 
   /** @return the page rank for each url */
-  def getPageRanks(urls: DList[(Int, String)], graph: Graph[Int])(implicit configuration: ScoobiConfiguration) = {
-    val (_, rankings) = calculateRankings(10.0f, initialise[Int](graph))
+  def getPageRanks(urls: DList[(String, String)], graph: Graph[String])(implicit configuration: ScoobiConfiguration) = {
+    val (_, rankings) = calculateRankings(10.0f, initialise[String](graph))
     val pageRanks = rankings.map { case (id, (pr,_,_)) => (id, pr) }
     (urls join pageRanks).values
   }
 
   /** @return new rankings */
   def updateRankings[K](previous: DList[Ranking[K]], d: Float = 0.5f)(implicit configuration: ScoobiConfiguration, wf: WireFormat[K], grouping: Grouping[K]) = {
-    val outbound: DList[(K, Float)] = previous flatMap { case t @ (url, (pageRank, _, links)) =>
+    val outbound: DList[(K, Float)] = previous.mapFlatten { case t @ (url, (pageRank, _, links)) =>
       links.map { link => (link, pageRank / links.size) }
     }
     (previous coGroup outbound) map { case (url, (prevData, outboundMass)) =>
@@ -76,8 +90,8 @@ trait PageRank extends NictaSimpleJobs {
    * @return a new delta and new set of rankings
    */
   @tailrec
-  private def calculateRankings(delta: Float, previous: Rankings[Int])
-                               (implicit configuration: ScoobiConfiguration): (Float, Rankings[Int]) = {
+  private def calculateRankings(delta: Float, previous: Rankings[String])
+                               (implicit configuration: ScoobiConfiguration): (Float, Rankings[String]) = {
     if (delta <= 1.0f) (delta, previous)
     else {
       val next = updateRankings(previous)
