@@ -39,7 +39,7 @@ object Pagerank extends ScoobiApp {
     // Graph is the reverse link graph, with each page boxed into a Vertex
     val graph = result.map(r => new Vertex(r._1, r._2.toSeq))
 
-    persist(getPageRanks(urls, graph).toDelimitedTextFile(output + "result"))
+    persist(getPageRanks(urls, graph, 10).toDelimitedTextFile(output + "result"))
   }
 
   val Node = """^(\d+): (.*)$""".r
@@ -61,8 +61,8 @@ object Pagerank extends ScoobiApp {
   }
 
   /** @return the page rank for each url */
-  def getPageRanks(urls: DList[(String, String)], graph: Graph[String])(implicit configuration: ScoobiConfiguration) = {
-    val (_, rankings) = calculateRankings(10.0f, initialise[String](graph))
+  def getPageRanks(urls: DList[(String, String)], graph: Graph[String], numIterations: Int)(implicit configuration: ScoobiConfiguration) = {
+    val (_, rankings) = calculateRankings(10.0f, initialise[String](graph), numIterations)
     val pageRanks = rankings.map { case (id, (pr,_,_)) => (id, pr) }
     (urls join pageRanks).values
   }
@@ -85,13 +85,13 @@ object Pagerank extends ScoobiApp {
    * @return a new delta and new set of rankings
    */
   @tailrec
-  private def calculateRankings(delta: Float, previous: Rankings[String])
+  private def calculateRankings(delta: Float, previous: Rankings[String], numIterations: Int)
                                (implicit configuration: ScoobiConfiguration): (Float, Rankings[String]) = {
-    if (delta <= 1.0f) (delta, previous)
+    if (numIterations == 0) (delta, previous)
     else {
       val next = updateRankings(previous)
       val maxDelta = next.map { case (_, (n, o, _)) => math.abs(n - o) }.max
-      calculateRankings(maxDelta.run, next)
+      calculateRankings(maxDelta.run, next, numIterations - 1)
     }
   }
 }
