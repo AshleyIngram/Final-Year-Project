@@ -25,17 +25,23 @@ Experiments will also be run using just the Map and Reduce operations of Nephele
 \subsection{Data Processing Task}
 The second varying factor will be the data processing task that the tools have to complete. The tasks have been chosen to represent real-world issues as closely as possible, to give an indication of performance in scenarios where the tools are likely to be used, rather than having synthetic benchmarks such as word counting or Terasort. 
 
-\subsubsection{Classic MapReduce Problem}
-A `classic' MapReduce problem is a problem which can easily be formulated in terms of MapReduce. Classic MapReduce problems tend to be stateless, and do not depend on other parts of the data. This makes it easier to compute the solution in parallel, but means that many problems are not well suited to MapReduce (such as naturally iterative problems). An example of a classic MapReduce problem would be Word Counting, as each document can be processed in parallel. 
+\subsubsection{Reverse Link Graph}
+The first problem the data processing tools will have to solve is generating a Reverse Link Graph \cite{dean2008mapreduce}. In some situations, finding the transpose of a directed graph can be difficult. For example, when considering the Web Graph; it is relatively trivial to find the edges coming out of a vertex (as the hyperlinks on a page indicate its outgoing edges), but it is far more difficult to find incoming edges (pages which link to the current page). 
 
-A Classic MapReduce problem has been chosen in order to measure how effective both Hadoop and Nephele are at processing data using the MapReduce paradigm. This specifically relates to the second research question (``How well does Nephele perform MapReduce tasks?''). 
+The Reverse Link Graph problem has been solved as it is a `classic' MapReduce problem. A `classic' MapReduce problem is a problem which can easily be formulated in terms of MapReduce. Classic MapReduce problems tend to be stateless, and do not depend on other parts of the data. This makes it easier to compute the solution in parallel, but means that many problems are not well suited to MapReduce (such as naturally iterative problems). An example of a classic MapReduce problem would be Word Counting, as each document can be processed in parallel. 
 
-The specific classic MapReduce problem chosen is generating a Reverse Link Graph \cite{dean2008mapreduce}. In some situations, finding the transpose of a directed graph can be difficult. For example, when considering the Web Graph; it is relatively trivial to find the edges coming out of a vertex (as the hyperlinks on a page indicate its outgoing edges), but it is far more difficult to find incoming edges (pages which link to the current page). 
+The Reverse Link Graph has been chosen in order to measure how effective both Hadoop and Nephele are at processing data using the MapReduce paradigm. This specifically relates to the second research question (``How well does Nephele perform MapReduce tasks?'').
 
 Finding a reverse link graph of the web is a key component in many search engines \cite{page1999pagerank} where backlinks are used to indicate how important a page is, and can also be used to analyse a network of academic articles by treating references as edges \cite{garfield2002algorithmic}. 
 
-\subsubsection{Non-Classic MapReduce Problem}
-% Machine Learning, etc
+\subsubsection{PageRank}
+The second problem for the data processing tools to tackle is the PageRank algorithm. PageRank is a method of objectively and mechanically rating the importance of a web page, trying to measure human interest and the attention paid to the page \cite{page1999pagerank}. 
+
+The PageRank algorithm is an example of the type of problem that MapReduce is traditionally cited as being poor at completing. It is an iterative algorithm which converges on a PageRank for each node. It requires information from adjacent nodes to compute a nodes PageRank at each step, which means that each step of the iteration must be performed sequentially, as part of a separate MapReduce pass.
+
+By contrast, PageRank should use many of the additional features that the PACT programming model provides over MapReduce. The presence of iteration support and dedicated operations for Joins should test the additional operations that PACT provides in order to determine whether they yield tangible performance benefits.
+
+Computing the PageRank of a graph of pages is a suitable test of how well the PACT programming model overcomes the issues of MapReduce, as it exercises many of the additional features. This will provide an answer to the first research question (``Does PACT overcome the inherent disadvantages of the MapReduce paradigm?'').
 
 \subsection{Cluster Size}
 The size of the cluster will be varied in order to give an indication of how well the data processing technologies perform at scale. This is a key factor in processing large scale data, as technologies which do not scale well as machines are added are unlikely to perform well in real-world scenarios, where the size of data may run into the Petabytes.
@@ -43,12 +49,33 @@ The size of the cluster will be varied in order to give an indication of how wel
 The elasticity of the Cloud will be required to scale the size of the cluster for different experiments. Specifically, experiments will be run using 2, 4, 6, 8 and 10 nodes. Scaling the size of the cluster will test both the scalability of the data processing tools, and the ability for the tools to harness the elasticity of the cloud, meeting the third research aim.
 
 \section{Measurements}
+Measurements will be taken from the experiments in order to give quantitative metrics which can be used for objective analysis.  
 
 \subsection{Runtime}
+Runtime is the length of time that a program (or data processing task) takes to execute. Runtime is one of the primary mechanisms for determining the efficiency of the data processing solutions. The time it takes to perform a task is a key element in large scale data processing, as the sheer scale of data can cause operations to take a long period of time. 
 
 \subsection{Scalability}
+The Scalability of data processing tools is also a key metric in determining how efficient they are. The scalability of a system refers to how well it accommodates additional resources \cite{bondi2000characteristics}, such as additional machines. 
+
+In the context of Data Processing tools such as Hadoop and Nephele, it is desirable for systems to be able to scale according to both the size of data, and the number of nodes in the cluster. A data processing tool should be able to handle any amount of data, providing that it has the correct amount of system resources. Indeed, this is what distinguishes tools like Hadoop from other data processing tools such as numpy - the ability to analyse petabytes of data. A Data Processing system should also be able to scale according to the number of nodes added. There should be no upper limit to the number of nodes in a cluster, as this provides an important mechanism of adding the necessary resources to handle larger processing tasks. Adding a large number of nodes with lesser resources may be more cost efficient than adding fewer nodes which have comparatively larger system resources. This may be a reason why many users that engage in large scale data processing build clusters from commodity components \cite{taylor2010overview}.  
+
+% TODO: Is the derivative acceptable?
+The specific type of scalability that will be considered in these experiments is Runtime Scalability. Intuitively, as nodes are added to the cluster the runtime for experiments should decrease as work can be partitioned out to a larger set of working nodes. In an ideal world, this would follow a linear progression; as the number of processors is doubled the runtime should be halved. This can be measured by taking the runtime of a task when the processor count doubles (so the processor count is $2^{p}$ where $p$ is an integer representing the processor count) and taking the derivative. 
 
 \subsection{Alternative Measurements}
-% Cost, Resource Utilisation, etc?
+Various alternative mechanisms could be used to determine the efficiency of the data processing tools. The scope of the project will be limited to measuring the runtime and runtime scalability, but some other measurements which could be used are as follows.
+
+\subsubsection{Data Scalability}
+It is important for clusters to be able to deal with large amounts of data in a reasonably efficient manner. A further test of scalability would be to test the cluster with various different datasets of different sizes. As with runtime scalability, this would ideally be linear, so that when the size of the data is doubled, runtime would also approximately double. The data processing tools may be of less use if the runtime increase is larger (for example, an exponential increase in runtime) as this would make running tasks on petabytes of data unreasonable.
+
+\subsubsection{Resource Utilisation}
+The resources used on nodes can be measured to determine how efficient the data processing tool is. An efficient data processing tool could be defined as one which uses the resources of each node effectively, by utilising a high amount of memory and CPU capacity. This would indicate that the data processing tool is using each node to the highest capacity possible, rather than requiring extra nodes to be added for more resources to become available.
+
+The utilisation of the network can also be used in determining efficiency, as a significant factor in how well a system scales is how much it communicates with other nodes. Larger amounts of communication overhead will increase the runtime of a system as it scales. Measuring the network overhead gives an indication of how much nodes communicate with each other, therefore giving an indication of communication overhead and scalability.
+
+\subsubsection{Cost}
+Another metric which can be used to compare data processing tools is cost efficiency. In situations where a cluster is being built using Cloud Computing services, running data processing jobs will cost on a per-usage basis. Depending on the runtime scalability, it may be more cost efficient to run a job on a larger number of nodes (so that it completes faster), versus running it on a smaller number of nodes (which will take longer, but cost less per hour). 
+
+It may also be more cost efficient to create a private cluster of machines to run data processing jobs, rather than using a pay-per-usage cloud model.
 
 \section{Hypothesis}
