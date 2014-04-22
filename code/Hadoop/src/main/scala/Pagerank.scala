@@ -20,7 +20,7 @@ import scala.annotation.tailrec
 import org.apache.hadoop.io.Text
 import AshleyIngram.FYP.Core
 
-object PageRank extends ScoobiApp with PageRank {
+object Pagerank extends ScoobiApp {
 
   def run() {
     val input = args(0)
@@ -41,12 +41,7 @@ object PageRank extends ScoobiApp with PageRank {
 
     persist(getPageRanks(urls, graph).toDelimitedTextFile(output + "result"))
   }
-}
 
-/**
- * This trait computes the page rank of a graph of pages
- */
-trait PageRank {
   val Node = """^(\d+): (.*)$""".r
 
   /** a Vertex is described as a page id and a list of incoming links */
