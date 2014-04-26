@@ -1,4 +1,4 @@
-package AshleyIngram.FYP.Nephele.ReverseLinkGraph;
+package AshleyIngram.FYP.Nephele;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -76,11 +76,11 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
         @Override
         public void reduce(Iterator<Record> records, Collector<Record> out) throws Exception {
             Record element = null;
-            StringValue result = "";
+            StringValue result = new StringValue("");
 
             while (records.hasNext()) {
                 element = records.next();
-                result.append(element.getFieldInto(1, StringValue.class).getValue();
+                result.append(element.getField(1, StringValue.class).getValue());
             }
 
             out.collect(element);
@@ -106,15 +106,15 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
         HadoopDataSource source = new HadoopDataSource(new SequenceFileInputFormat<Text, Text>(), new JobConf(), "Input Lines");
         TextInputFormat.addInputPath(source.getJobConf(), new Path(dataInput));
 
-        MapOperator mapper = MapOperator.builder(new TokenizeLine())
+        MapOperator mapper = MapOperator.builder(new GetLinkPairs())
                 .input(source)
                 .name("Get Link Pairs")
                 .build();
-        ReduceOperator reducer = ReduceOperator.builder(CountWords.class, StringValue.class, 0)
+        ReduceOperator reducer = ReduceOperator.builder(GroupByKey.class, StringValue.class, 0)
                 .input(mapper)
                 .name("Group by Key")
                 .build();
-        FileDataSink out = new FileDataSink(new CsvOutputFormat(), output, reducer, "Word Counts");
+        FileDataSink out = new FileDataSink(new CsvOutputFormat(), output, reducer, "Reverse Link Graph");
         CsvOutputFormat.configureRecordFormat(out)
                 .recordDelimiter('\n')
                 .fieldDelimiter(' ')
