@@ -46,8 +46,8 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
         @Override
         public void map(Record record, Collector<Record> collector) {
             // Get input data from Stratosphere record
-            String key = record.getField(1, StringValue.class).getValue();
-            String value = record.getField(2, StringValue.class).getValue();
+            String key = record.getField(0, StringValue.class).getValue();
+            String value = record.getField(1, StringValue.class).getValue();
 
             // Perform actual map operation
             scala.collection.Iterable<Tuple2<String, String>> scalaPairs;
