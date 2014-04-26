@@ -81,6 +81,7 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
             while (records.hasNext()) {
                 element = records.next();
                 result.append(element.getField(1, StringValue.class).getValue());
+                result.append(new StringValue(", "));
             }
 
             out.collect(element);
@@ -103,7 +104,7 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
         String output    = (args.length > 2 ? args[2] : "");
 
 
-        HadoopDataSource source = new HadoopDataSource(new SequenceFileInputFormat<Text, Text>(), new JobConf(), "Input Lines");
+        HadoopDataSource source = new HadoopDataSource(new SequenceFileInputFormat<Text, Text>(), new JobConf(), "Input Data");
         TextInputFormat.addInputPath(source.getJobConf(), new Path(dataInput));
 
         MapOperator mapper = MapOperator.builder(new GetLinkPairs())
@@ -119,7 +120,7 @@ public class ReverseLinkGraph implements Program, ProgramDescription {
                 .recordDelimiter('\n')
                 .fieldDelimiter(' ')
                 .field(StringValue.class, 0)
-                .field(IntValue.class, 1);
+                .field(StringValue.class, 1);
 
         Plan plan = new Plan(out, "Reverse Link Graph");
         plan.setDefaultParallelism(numSubTasks);
