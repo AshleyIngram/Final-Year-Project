@@ -39,7 +39,7 @@ object Pagerank extends ScoobiApp {
     // Graph is the reverse link graph, with each page boxed into a Vertex
     val graph = result.map(r => new Vertex(r._1, r._2.toSeq))
 
-    persist(getPageRanks(urls, graph, 10).toDelimitedTextFile(output + "result"))
+    persist(getPageRanks(urls, graph, 3).toDelimitedTextFile(output + "result"))
   }
 
   val Node = """^(\d+): (.*)$""".r
