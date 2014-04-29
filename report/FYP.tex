@@ -22,6 +22,9 @@
   \newcommand{\PD}[2]{\frac{\partial #1}{\partial #2}} % partial derivation
   \newcommand{\dd}{\,\mathrm{d}} % to be used in differentials
 
+  \newcommand{\nocontentsline}[3]{}
+  \newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
+
 % Rules for handling pre-zipped figures. To create zipped figs do this:
 % $ head myfigure.eps > myfigure.eps.bb
 % $ gzip myfigure.eps
@@ -73,6 +76,7 @@
 \include{chapter3}
 \include{chapter4}
 \include{chapter5}
+\include{chapter6}
 
 \addcontentsline{toc}{chapter}{\numberline { }Bibliography}
 \bibliographystyle{plain}

@@ -79,3 +79,31 @@ Another metric which can be used to compare data processing tools is cost effici
 It may also be more cost efficient to create a private cluster of machines to run data processing jobs, rather than using a pay-per-usage cloud model.
 
 \section{Hypothesis}
+The project as a whole focuses on answering 3 core research questions. Rather than hypothesising the result to each individual experiment, there will be a prediction for each research question. Each experiment is used as a way of gathering information to answer one of the three core questions, and as such the results to individual experiments can be inferred from the broader descriptions.
+
+\tocless\subsection{Does PACT overcome the inherent disadvantages of the MapReduce paradigm?}
+In order to determine whether PACT overcomes the inherent disadvantages of MapReduce, both tools will solve the PageRank problem; a data processing task which exhibits many of the features generally considered to be a poor fit for MapReduce.
+
+It is likely that PACT will demonstrate a clear superiority over MapReduce in these situations by having a smaller runtime, regardless of the number of nodes that are used to process the data. The presence of dedicated PACT operators for both iteration and delta-iteration will be a significant benefit for PACT, as PageRank is a naturally iterative algorithm. Additionally, PACT provides operators for joins, which are used throughout the PageRank algorithm. This will allow the Stratosphere runtime to optimise these steps accordingly.
+
+In contrast, MapReduce lacks a dedicated method of iteration, meaning that any iterative algorithm must be implemented using multiple Map and Reduce steps. Additionally, any joins required by the algorithm will have to be implemented using additional Map and Reduce operations, causing multiple steps per iteration.
+
+This will cause the PACT runtime to outperform the MapReduce runtime when running the PageRank experiment, indicating that it overcomes the inherent flaws in the MapReduce paradigm.
+
+\tocless\subsection{How well does Nephele perform MapReduce tasks?}
+The Reverse Link Graph problem will be used to determine how well Nephele performs MapReduce tasks. As a classic MapReduce problem it allows comparison with Hadoop, the current status quo of data processing tools.
+
+In these situations Hadoop should be the clear winner in terms of performance. It is a simpler tool, designed for running MapReduce processes without the overhead associated with having other operations available. This allows the MapReduce runtime to be highly optimised to performing those tasks. As a research project, it is far more likely that the limited development resources of Nephele would be focussed towards optimising other operations, designed to be the source of an advantage over MapReduce. This may lead to a less efficient MapReduce implementation. 
+
+Nephele is also a relatively immature project in comparison to Hadoop. It has existed for far less time, and therefore has less contributions. It is a less visible project than Hadoop, and has been used less in production. On this basis it can be reasoned that Nephele will have had less development attention towards optimising the Map and Reduce processes, and will therefore have inferior performance with these tasks.
+
+\tocless\subsection{How do Hadoop and Nephele perform in a highly elastic Cloud Computing \\ environment?}
+An important factor in how suitable data processing tools are to large scale data sets is how well they scale. This is particularly important in Cloud Computing environments. In order to evaluate how well the tools scale, both the Reverse Link Graph experiment and the PageRank experiment will be run using a varying number of nodes, with the difference in runtime evaluated to determine how well adding additional resources impacts the data processing tools. 
+
+Both Nephele and Hadoop (and in a broader sense, PACT and MapReduce) are based on stateless functions being distributed across nodes, evaluating data massively in parallel. Because of the nature of this model, communication overhead (the primary cause of parallel overhead) should be minimised during the primary processing time of the tools. It can therefore be expected that both Nephele and Hadoop will increase in a generally linear fashion.
+
+It would be unrealistic to expect the tools to scale in a perfectly linear manner, as there is still communication required between the nodes. In particular, some operations can be made parallel more easily than others; map is a naturally parallel action, where the nature of reduce requires communication between at least 2 completed map operations. There will also be communication required at the start and end of each job, as input and output data must be read from, and written to, the file system. Finally, there will be overhead required to schedule tasks to nodes throughout the cluster. This process is centralised, with the master node determining which nodes will be responsible for processing different parts of the data at each stage. This computation is serial by necessity, and in contrast to most other processing tasks may increase in time as more nodes are added (as the scheduling problem will become progressively more complex). 
+
+One major cause of scalability issues in parallel computing can be the underlying file system. Communicating to disk is expensive, and will be even more so if a node has to communicate over the network to get access to the file system. The file system implementation may therefore play a key role in determining the scalability of the system. An inferior file system implementation may lead to more network communication, significantly negatively impacting the runtime of a processing task. As both Nephele and Hadoop use the Hadoop Distributed File System, this discrepancy will not be an issue when assessing the relative scalability of the two systems.
+
+Based on this analysis, it can be expected that Nephele and Hadoop will not show any major differences in scalability, with both scaling in a near-linear fashion.
