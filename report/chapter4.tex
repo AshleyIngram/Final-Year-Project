@@ -2,21 +2,74 @@
 This chapter will cover the implementation details of the experiments, discussing the runtime configuration of tools and other considerations made when running the data processing tasks.
 
 \section{Choice of Data}
+An important factor in big data problems is the nature of the data which is being processed. As discussed in the Background Reading (chapter \ref{CHAP_SECOND}) data is usually large scale, but may also be unpredictable, changing in both size and quality. It is important to choose a dataset representative of what data processing tools are usually used for, as using completely synthetic data without appropriate properties will not provide an accurate portrayal of how well the tools perform in the real world.
 
-\subsection{Connectivity}
+\subsection{Desirable Properties}
+There are several desirable properties which will make a dataset appropriate for use in the experiments.
 
-\subsection{Size}
+\subsubsection{Connectivity}
+Both the Reverse Link Graph and PageRank problems treat the input data as graphs, and perform operations on them accordingly. An important property that the data must have is that the graph must have a high degree of connectivity (i.e. lots of connections between nodes in the graph). 
 
-\subsection{Data Format}
+A Reverse Link Graph relies on a node being linked to by other nodes in the graph. In the case where there are no links between nodes, the algorithm will not generate any link pairs, and will therefore have no work to perform in the Reduce stage. The more links pairs are generated, the greater the amount of work required in the Reduce step.
 
-\subsubsection{SequenceFile}
+In the case of PageRank, the algorithm uses values of adjacent nodes to determine a nodes value. A node which is connected to many high valued nodes will have a high value itself. This requires high degree of connectivity to provide a meaningful PageRank. It also requires that all nodes be in the graph. The subset of a graph cannot be used as it will have `dangling references' - connections where one of the nodes is outside of the graph (and therefore has no PageRank). 
 
-\subsubsection{CSV}
+\subsubsection{Size}
+Size is an important property of the data as it should be reflective of real-world data sizes. In particular, the size of the data is constrained by 2 major factors.
+
+\begin{enumerate}
+	\item The size of the data cannot be too \textit{small} as it will limit the tools capacity to run the problem in parallel. Amdahl's law \cite{amdahl1967validity} states that there is a theoretical maximum speedup which can be achieved by adding additional parallel processing capacity. Past this point, adding extra resources (nodes or processors) will not result in improved runtime performance, and may detract from performance (due to additional communications overhead, or other serial factors).
+	\item The size of the data cannot be too \textit{large} as there will be issues with storing, transferring, and processing the data on the resource constrained deployment environment.
+\end{enumerate}
+
+\subsubsection{Ease of Processing}
+There are various different areas where Reverse Link Graph and PageRank can be used. Examples include analysing the importance of academic papers, or determining which sections of code in a program are dependant on one another. One of the major factors in choosing which type of data is used is how well suited it is to be processed by the data processing tools. 
+
+Specifically, whilst it is possible to process other types of data, it is much simpler to process plain-text data, as there are a wide array of available input mechanisms. Both the Hadoop and Nephele APIs have methods of reading in a text file, processing CSVs and handling plain text in other ways. 
+
+Many academic papers are made available in PDF format. This makes it difficult to process as custom input adaptors would have to be created to parse the data and pass it to the data processing steps. This would have limited impact on the performance of the tools, and is therefore not important within the scope of the project. 
+
+An ideal candidate for a naturally occurring, plain text representation of a graph would be the World Wide Web. The web consists of a set of pages (nodes) with links (edges) between them. Treating the web as a graph is a common feature of other research works, including the original PageRank implementation \cite{page1999pagerank}.
+
+\subsection{Wikipedia Datasets}
+Wikipedia is an online encyclopaedia which is available in multiple languages. It exhibits all of the properties which are desirable for the data processing problems. Wikipedia represents a graph with high connectivity, as articles within the encyclopaedia often link to other articles. The Wikimedia foundation make a set of full HTML dumps available for the various language editions of Wikipedia dating up to 2008. As a plain text representation of the Wikipedia dataset, this is easier to process than alternative formats (such as PDFs). 
+
+The various language versions of Wikipedia are different sizes. This is allows prototyping to be carried out with different data sizes, in order to find the appropriate size for the experiments.
+
+\begin{itemize}
+	\item Wiki for Schools is a charitable project aimed at providing a self-contained subset of Wikipedia for use in schools. Pages are chosen for the subset of the encyclopaedia based on whether they are part of the English school curriculum. The Wiki for Schools dataset was evaluated, but was deemed too small to provide a true test of the capabilities of the data processing tools.
+	\item The Spanish language version of Wikipedia was also evaluated, but was too large to be used for data processing, as the resource constraints prevented experiments from being run on a low number of nodes.
+	\item The Simple English Wikipedia is an encyclopaedia for explaining complex subjects in layman's terms, without using jargon or assuming any prior knowledge of a subject. The simple English Wikipedia provided a good compromise in data size, and was therefore chosen as the dataset for running the experiments.
+\end{itemize}
+
+\section{Data Format}
+In addition to the representation of the data (a plain text representation) the underlying format used to store this data is also important. The Hadoop File System is known to suffer from the ``Small File Problem'' \cite{hdfsSmallFiles}. The file system is designed and optimised to store large files, rather than accessing lots of smaller files. In addition to this, HDFS has a large block size. Each file takes up at least one block which is by default 1MB. This will cause a significant amount of space to be wasted if each file is stored independently (as web pages are rarely 1MB in size).
+
+The choice was taken to pre-process the data used in the experiments in order to overcome the small file problem. Whilst this represents an inherent limitation of the technology used, it effects both Stratosphere and Hadoop equally (as both use HDFS) and therefore will not have a dramatic effect on the conclusions drawn from the experiments. It will also allow both data processing technologies a chance to perform in ideal circumstances, rather than limiting them by the choice of data. This may not reflect a real-world implementation of the processing tasks, as this pre-processing step may be prohibitively expensive in larger datasets (for example, if the whole World Wide Web was being considered).
+
+The pre-processing step combines the small files together into a larger file, which can then be processed accordingly.
+
+\subsection{SequenceFile}
+A SequenceFile is a Hadoop-specific binary file format which stores Key/Value pairs. It is optimised for use in HDFS. A tool was created which converted an arbitrary set of web pages into a SequenceFile, by setting the key as the filename of the web page, and the value to the contents of the file. This dramatically reduced the size of the data, as it discarded irrelevant parts of the data (such as image files) and provided a more compressed representation of the text data. 
+
+Unfortunately, the Stratosphere implementation of the SequenceFile input format was felt to be too immature for use in the experiments, and therefore the use of a SequenceFile to represent data was deemed unsuitable.
+
+\subsection{CSV}
+CSV (Comma-separated values) is a plain-text method of representing tabular data. CSV is a well established method of storing data, and while it lacks an official standard tools which process CSV data typically follow RFC 4180 \cite{rfc4180}. As an open and accepted data format, CSV is well supported by both Hadoop and Stratosphere. The relative simplicity of the format also makes it feasible to implement a basic parser where necessary. 
+
+Data was stored in CSV format as Key/Value pairs, with the key being the page filename, and the value being the contents of the file. This mirrors the way the data was stored in a SequenceFile, but in a more widely accepted file format. 
 
 \section{Deployment Environment}
+% TODO: Cloud testbed
+
+\section{Measuring Runtime}
+% Taking an average - Include comments RE Marks feedback
 
 \section{Programming Language \& Frameworks}
+% Scala and Scoobi
 
 \section{Reverse Link Graph}
+% Implementation concerns - what is the Map and Reduce, etc. Code modified from NICTA
 
 \section{PageRank}
+% Implementation concerns - what is the DAG, etc. Code modified from Stratosphere project
