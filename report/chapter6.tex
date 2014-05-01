@@ -10,6 +10,22 @@
 
 \subsection{Comparison to Prior Work}
 
-\subsection{Contribution to Research}
+\subsubsection{Contribution to Research}
+The work carried out in this project is intended to contribute to the existing landscape by building on the work of previous research. Specifically, there are two core Nephele papers which have previously studied the performance characteristics of Stratosphere (then Nephele) by comparing it to Hadoop (``Exploiting Dynamic Resource Allocation for Efficient Parallel Data Processing in the Cloud'' \cite{warneke2011exploiting} and ``Nephele/PACTs: a programming model and execution framework for web-scale analytical processing'' \cite{battre2010socc}). 
 
-\section{Future Work}
+This project attempts to reinforce the findings of these works, and to contribute to the existing body of research in the following ways
+
+\begin{enumerate}
+	\item Performing experiments designed to test the scalability of tools, and how they react to changing resources. The existing research typically uses one fixed size cluster, with some prior research focusing on a comparison between a fixed Hadoop cluster and a Stratosphere cluster using automated resource acquisition. In this project, experiments have been run across varying cluster sizes, allowing a discussion of how well the tools respond to changing resources (in the form of cluster size).
+	\item The experiments have been chosen to be non-trivial in nature. This is in contrast with many existing benchmarks, which use synthetic tasks (such as Word Counting or Terasort) and data created for the sole purpose of experimentation. By comparison, we have chosen problems which attempt to reflect the real-world usage of data processing tools, with existing data sources used for experimentation. 
+	\item By providing a performance comparison and replicating the results of prior research using later versions of Hadoop and Stratosphere. This is significant as the existing performance comparisons use earlier versions of software, and since this point the Stratosphere project in particular has changed significantly (becoming an Open Source project and being accepted on to the Google Summer of Code and Apache Incubator projects).
+\end{enumerate}
+
+\subsection{Future Work}
+There are a number of possible extensions to the project which could be tackled as future work.
+
+A particular area which was identified as an extended goal of the project was to look at the performance of the data processing tools in a public cloud environment. In particular, this work could look at the impact of the unique method in which Stratosphere can acquire resources rather than processing data on a fixed cluster size, and how this approach effects performance and scalability. 
+
+Various cloud providers offer hosted Platform as a Service data processing tools (typically Hadoop) which allow users to process data without worrying about manually configuring a cluster. A possible extension to this work would be to consider how this effects the performance of data processing tasks, and whether the elasticity afforded by a Platform of a Service approach is appropriate for data processing scenarios. 
+
+An alternative direction would be to look at other, more specialised data processing tools which are designed to process certain types of data (for example, large scale graph processing tools). 

@@ -61,15 +61,21 @@ Data was stored in CSV format as Key/Value pairs, with the key being the page fi
 
 \section{Deployment Environment}
 % TODO: Cloud testbed
+% Number of VMs, VM resources, comparison to other experimental setups (re marks feedback)
+% Hadoop and Stratosphere versions
 
-\section{Measuring Runtime}
+% \section{Measuring Runtime}
 % Taking an average - Include comments RE Marks feedback
 
 \section{Programming Language \& Frameworks}
-% Scala and Scoobi
+Experiments were initially implemented in the Scala programming language \cite{scalalang}. Scala is a functional programming language with Object-Orientated support, which uses the Java Virtual Machine as a runtime environment. This allows seamless integration with existing Java libraries, such as those exposed by Stratosphere and Hadoop. As a functional language, Scala has native support for higher order functions such as map - indeed, MapReduce was originally inspired by some of the fundamental operations present in functional languages \cite{dean2008mapreduce}. This allows PACT and MapReduce jobs to be represented in a very succinct and readable manner. 
 
+In addition to being able to call existing Java libraries, there are several `wrapper' libraries which have been developed to allow for Hadoop jobs to be written in idiomatic Scala, taking full advantage of functional features such as higher order functions. Prototypes were creating using Scalding \cite{scalding}, a library developed by Twitter, but use of this framework was later discontinued as it lacked support for later versions of Hadoop. It was replaced by Scoobi \cite{scoobi}, an open source project by NICTA.
+
+The standard distribution of Stratosphere features a Scala API, but it was found to be too unstable for experiment development, with significant changes to the interface between different software versions. For this reason, Stratosphere experiments were reimplemented in Java, whilst reusing the core, technology agnostic processing logic which was created in Scala. 
+
+The difference between Java and Scala is not significant in regards to processing performance. Both languages compile to Java Virtual Machine bytecode, and are therefore largely interchangeable. 
 \section{Reverse Link Graph}
-% Implementation concerns - what is the Map and Reduce, etc. Code modified from NICTA
-
+% Implementation concerns - what is the Map and Reduce, etc.
 \section{PageRank}
-% Implementation concerns - what is the DAG, etc. Code modified from Stratosphere project
+% Implementation concerns - what is the DAG, etc. Code modified from Stratosphere project and NICTA
