@@ -60,12 +60,19 @@ CSV (Comma-separated values) is a plain-text method of representing tabular data
 Data was stored in CSV format as Key/Value pairs, with the key being the page filename, and the value being the contents of the file. This mirrors the way the data was stored in a SequenceFile, but in a more widely accepted file format. 
 
 \section{Deployment Environment}
-% TODO: Cloud testbed
-% Number of VMs, VM resources, comparison to other experimental setups (re marks feedback)
-% Hadoop and Stratosphere versions
+All experiments were run using the Leeds University School of Computing Cloud Testbed. The Cloud Testbed is a private cloud consisting of 6 machines, controlled using the OpenNebula toolkit. Virtual machines can be created as required, and this capability was used to add resources to the data processing tools. 
 
-% \section{Measuring Runtime}
-% Taking an average - Include comments RE Marks feedback
+\subsection{Node Specifications}
+The Cloud Testbed allows the creation of Virtual Machines with fixed resources. The virtual machines are each permitted 1 virtual processor core and 1GB of memory. This allows the virtual machines to have a consistent level of performance, limiting the effect of load on the underlying hardware. The physical hardware the virtual machines execute on have Intel Xeon Quad Core processors (X3360) and 4GB of memory.
+
+The Cloud Testbed allows for up to 10 virtual machines to be created per user. Whilst data processing software such as Hadoop has been designed to use large numbers of nodes, and this cluster size may be smaller than in some real-world applications of Hadoop, significantly smaller cluster sizes are used in practice. For example, Amazon limit users of their MapReduce service to 20 nodes, and require anybody exceeding that usage to request a higher quota \cite{emrlimits}. This approach is consistent with previous research in the field \cite{warneke2011exploiting}.
+
+The resources provided by the Cloud Testbed are not ideal hardware for running large scale data processing problems, which typically require large amounts of memory. Whilst this will undoubtedly impact the performance of the experiments, the environment is consistent for both Hadoop and Stratosphere, and shouldn't affect the comparison of the tools.
+
+\subsection{Software}
+Hadoop version 2.3.0 and Stratosphere version 0.5 were installed on the cluster. At present these are the latest versions of both software packages. Stratosphere was configured to use HDFS in order to limit the effect that the file system had on the experiments. The version of Stratosphere installed was not dependant on YARN, as it was felt this would limit the effectiveness of testing scalability.
+
+The data was loaded into HDFS before the experiments, and this was not included in runtime calculation. This limits the cost of communication overhead, as the data is already distributed across nodes appropriately, rather than data having to be transferred at the start of experiments. 
 
 \section{Programming Language \& Frameworks}
 Experiments were initially implemented in the Scala programming language \cite{scalalang}. Scala is a functional programming language with Object-Orientated support, which uses the Java Virtual Machine as a runtime environment. This allows seamless integration with existing Java libraries, such as those exposed by Stratosphere and Hadoop. As a functional language, Scala has native support for higher order functions such as map - indeed, MapReduce was originally inspired by some of the fundamental operations present in functional languages \cite{dean2008mapreduce}. This allows PACT and MapReduce jobs to be represented in a very succinct and readable manner. 
@@ -76,6 +83,146 @@ The standard distribution of Stratosphere features a Scala API, but it was found
 
 The difference between Java and Scala is not significant in regards to processing performance. Both languages compile to Java Virtual Machine bytecode, and are therefore largely interchangeable. 
 \section{Reverse Link Graph}
-% Implementation concerns - what is the Map and Reduce, etc.
+The Reverse Link Graph can be computed using a single Map and Reduce operation. The implementation is therefore very similar across Hadoop and Stratosphere, as it does not use any of the additional functionality present in PACT.
+
+The Reverse Link Graph experiment was run a number of times to give an average runtime performance, as runtime can be affected by a number of external elements. 
+
+The first step of computing the Reverse Link Graph is the Map operation. The Map stage operates on each of the documents (or articles) in the Wikipedia dataset. It extracts any HTML anchor tags from the source code of the document, and returns a list of link pairs, with the first item being the destination of the link, and the second item being the source (the current document) that the link is from.
+
+The reduce step relies on the runtime (either Hadoop or Stratosphere) to group the items by key, so the links are grouped by the destination. The reduce step can then combine the sources into a string, giving a list of the pages which link to that destination. 
+
+\begin{figure}[H]
+\begin{tikzpicture}
+
+% No indentation, or it'd be included on the diagram! D:
+
+\node[doc,scale=0.5] (input) {
+\begin{lstlisting}[language=html]
+<html>
+  <body>
+    <a href="page1.htm">
+      Example Article
+    </a>
+  </body>
+</html>
+\end{lstlisting}
+};
+
+\node[draw, circle, minimum size=1.5cm, right=of input] (Map) { Map };
+
+\node[doc,scale=0.5, right=of Map] (linkpairs) {
+\begin{lstlisting}
+(dest1, src2)
+(dest1, src3)
+(dest2, src1)
+(dest3, src4)
+(dest3, src6)
+(dest3, src7)
+\end{lstlisting}
+};
+
+\node[draw, circle, minimum size=1.5cm, right=of linkpairs] (Reduce) { Reduce };
+
+\node[doc,scale=0.5, right=of Reduce] (output) {
+\begin{lstlisting}
+(dest1, "src2, src3")
+(dest2, "src1")
+(dest3, "src4, src6, src7")
+\end{lstlisting}
+};
+
+\path[->] (input) edge (Map);
+\path[->] (Map) edge (linkpairs);
+\path[->] (linkpairs) edge (Reduce);
+\path[->] (Reduce) edge (output);
+
+\end{tikzpicture}
+
+\caption{A graphical representation of the Reverse Link Graph workflow}
+\end{figure}
+
 \section{PageRank}
-% Implementation concerns - what is the DAG, etc. Code modified from Stratosphere project and NICTA
+PageRank is a more complex algorithm than the Reverse Link Graph computation, and benefits from the more advanced features of PACT. In particular as an iterative algorithm, the PageRank algorithm benefits from having that functionality built-in to Stratosphere. 
+
+As Hadoop lacks some of the necessary operations to implement PageRank in an ideal way, the algorithm was implemented in twice, with the different technologies having different implementation styles. For Stratosphere, all of the features available to PACT were used, whereas with Hadoop the implementation is limited to being expressed in a MapReduce fashion.
+
+The PageRank experiment was run a number of times to give an average runtime performance, as runtime can be affected by a number of external elements. 
+
+For both implementations the PageRank algorithm ran for 3 iterations. This was in order to provide a fair illustration of how well iterative algorithms perform in both technologies, whilst not being prohibitively time consuming (especially on smaller cluster sizes).
+
+\subsection{Stratosphere Implementation}
+The stratosphere implementation of PageRank was the `ideal' implementation, as it has a number of operations required by the PageRank algorithm. 
+
+The first step in the process was to take the input data from the data source, and build the Reverse Link Graph. The PageRank algorithm determines the rank of a page by considering other pages which link to it, which requires the Reverse Link Graph to be computed. 
+
+Once the Reverse Link Graph had been found, the iterative process could begin.
+
+Each node received the PageRank of its neighbours using a Join operation, finding the scores of other nodes by their unique identifiers (the page name). The resulting data was then sent to a Reduce operation, which computed the new rank of the node by summing the rank of its neighbours, and multiplying the resulting value by a `dampening value'. 
+
+After the first map operation, this process was applied iteratively 3 times. 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+
+% No indentation, or it'd be included on the diagram! D:
+\node[circle] (dummy1) {};
+
+\node[doc,scale=0.5, above=of dummy1] (input1) {
+\begin{lstlisting}
+(page1, 0.5)
+\end{lstlisting}
+};
+
+\node[doc,scale=0.5, below=of dummy1] (input2) {
+\begin{lstlisting}
+(src1, 0.3)
+(src2, 0.7)
+\end{lstlisting}
+};
+
+\node[draw, circle, minimum size=1.5cm, right=of dummy1] (Join) { Join };
+
+\node[draw, circle, minimum size=1.5cm, right=of Join] (Reduce) { Reduce };
+
+\node[draw, right=of Reduce] (container) {
+
+\begin{tikzpicture}
+\node[rotate=90] (dots) {...};
+
+\node (dummy2) {};
+
+\node[doc,scale=0.5, above=of dummy2] (output1) {
+\begin{lstlisting}
+(page1, 0.8)
+\end{lstlisting}
+};
+
+\node[doc,scale=0.5, below=of dummy2] (output2) {
+\begin{lstlisting}
+(src1, 0.5)
+\end{lstlisting}
+};
+
+\end{tikzpicture}
+};
+
+\path[->] (input1) edge (Join);
+\path[->] (input2) edge (Join);
+\path[->] (Join) edge (Reduce);
+\path[->] (Reduce) edge (container);
+\path[arrow, dashed] (container) |- (3, 3) -| (Join);
+
+\end{tikzpicture}
+
+\caption{A graphical representation of the iterative part of PageRank}
+\end{figure}
+
+\subsection{Hadoop Implementation}
+As Hadoop lacks the necessary operations to perform the PageRank algorithm, it must be implemented using a series of Map and Reduce operations. 
+
+The initial process of converting the input data to the necessary format by performing the Reverse Link Graph calculation took a single Map and a Reduce operation. 
+
+For each iteration of the algorithm, a Map and Reduce operation was required to join the node with its edges. A further MapReduce step was required to compute the updated rank for the page (as with Stratosphere). A final MapReduce step was taken to format the data in an appropriate format for the next iteration, a step taken automatically by Stratosphere.
+
+It took a total of 10 MapReduce passes to compute the PageRank over 3 iterations.
