@@ -4,7 +4,8 @@
 %%% packages
 
   \usepackage{a4wide}           % set page size etc
-  \usepackage{graphicx}  % to include figures in .eps-format
+  \usepackage{graphicx}  
+  \usepackage{epstopdf}         % to include figures in .eps-format
   \usepackage{multido}          % used in chapter 3 to repeat text
   \usepackage{setspace}         % provides \onehalfspacing
   \usepackage{url}              % to set URLs, paths, commands ... in tt
@@ -18,6 +19,10 @@
   \usepackage{svg}
   \usepackage{tikz}
   \usepackage{listings}
+  \usepackage{booktabs}
+
+  \DeclareGraphicsExtensions{.eps}
+  \DeclareGraphicsExtensions{.png}
 
   \usetikzlibrary{positioning}
   \tikzstyle{line}=[draw]
