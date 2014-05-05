@@ -89,7 +89,7 @@ In addition performing better, it appears that Stratosphere has a more predictab
 	\centering
 	\includegraphics[scale=0.6]{resources/StratRLGScalability.eps}
 	\caption{Logarithmic plot of Stratosphere Reverse Link Graph Runtime}
-	\label{hadoopvstratRLGRuntime}
+	\label{stratRLGScale}
 \end{figure}
 
 The Stratosphere implementation of Reverse Link Graph also scales near linearly to the amount of processors. When comparing to the Hadoop implementation, it appears that the implementation may scale slightly worse between 4 and 8 nodes, though this is likely to be because of the effects of Amdahl's law. Stratosphere would be more susceptible to the issues of parallel overhead as its runtime is lower, and communication would therefore take up a higher percentage of the overall execution time. 

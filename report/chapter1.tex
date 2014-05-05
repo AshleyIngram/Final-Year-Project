@@ -56,8 +56,85 @@ An evaluation will also be carried out to determine whether the aims and objecti
 
 The methodology and management of the project will also be evaluated to identify areas of improvement in project management.
 
+\section{Requirements}
+The projects success will be judged on whether it meets a set of requirements. Requirements will be broken into 2 categories. Minimum requirements are essential for the success of the project. Failure to meet any of the minimum requirements would seriously compromise the project, and would make it unlikely to qualify for a pass grade. There are also various extended requirements. These requirements can be seen as `stretch goals'. They are not essential for the project, but will contribute considerably to the end product.
+
+\subsection{Minimum Requirements}
+By meeting the minimum requirements, it should be possible to replicate the results in existing literature \cite{warneke2011exploiting}. 
+
+\begin{itemize}
+	\item Install Hadoop
+
+	Installing Hadoop is a necessary part of the project as it must be used to run data processing experiments. At a minimum, Hadoop should be installed on the University of Leeds School of Computing Cloud Testbed. 
+
+	\item Install Stratosphere
+
+	Installing Stratosphere is a necessary part of the project so experiments can be run, and the results compared with Hadoop. At a minimum, Stratosphere should be installed on the University of Leeds School of Computing Cloud Testbed. 
+	
+	\item Run a MapReduce processing task
+
+	There are various basic MapReduce tasks which are provided as examples for both Stratosphere and Hadoop. Common examples are Word Counting and the Terasort benchmark. The example code provided could be executed against the same dataset to provide a basic comparison of the performance of Hadoop and Stratosphere in a MapReduce situation.
+
+	\item Run a non-MapReduce processing task
+
+	There are various pieces of example code for Stratosphere which demonstrate non-MapReduce processes such as K-Means clustering. There are also various libraries and frameworks for Hadoop which provide implementations of algorithms such as K-Means. These implementations can be compared in order to determine whether PACT overcomes the issues with MapReduce.
+
+	\item Run an experiment on a different cluster size
+
+	In order to determine how scalable the solutions are, an experiment must be run on more than one cluster size. As a minimum requirement, the MapReduce benchmark (e.g. Word Count, Terasort) could be run on 2 and 4 machines for each processing technology, with the results compared for scalability.
+\end{itemize}
+
+\subsection{Extended Requirements}
+The extended requirements provide extensions to the project which constitute work that furthers the existing research.
+
+\begin{itemize}
+	\item Real-world problem
+
+	In addition to running a basic MapReduce and non-MapReduce problem, a `real-world' scenario could be chosen. This would reflect the use of data processing tools in a more natural way, rather than relying on synthetic benchmarks. There are various datasets made publicly available \cite{publicAmazonData}, and these could be analysed using both of the data processing tools with their execution times compared. An example of the type of problem which may be relevant is the 1000 genome project \cite{genomeData}.
+
+	In addition to testing the performance of Hadoop and Stratosphere in a less artificial environment, this extended requirement will also require new code to be developed to run on the processing technologies, rather than using existing example code.
+
+	\item Scale all experiments
+
+	Rather than just scaling one experiment across 2 different cluster sizes, all experiments could be ran across different cluster sizes to provide a more comprehensive measure of scalability. Additionally, the cluster size could vary to a larger extent. Rather than running experiments on 2 cluster sizes, they could be executed on a larger range of machines.
+
+	\item Public Cloud
+
+	As a minimum requirement, the clusters will be built on the University of Leeds School of Computing Cloud Testbed. An extension would be to run experiments using a public Infrastructure as a Cloud service such as Amazon EC2 or Windows Azure. 
+\end{itemize}
+
 \section{Schedule}
 The project schedule will be created around a set of fixed milestones in the project process. Work will be allocated in weekly sprints to ensure that the relevant work is completed in time for each milestone. Work will be prioritised so that scope can be cut to meet a milestone if required.
+
+Figure \ref{originalGantt} is a Gantt chart representing the predicted schedule for the project. At this stage it is left intentionally vague, as more information will become available as the initial stages of the project are completed. For example, there is time allocated for Experiment Implementation and Additional Requirements, rather than actual individual experiments or work required to complete specific additional requirements.
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+	vgrid,
+	hgrid,
+	]{1}{16}
+	\gantttitle{Project Schedule (weeks)}{16} \\
+	\gantttitlelist{1,...,16}{1} \\
+	\ganttgroup{Background Research}{1}{6} \\
+	\ganttbar{Aims \& Objectives}{1}{1} \\
+	\ganttbar{Literature Review}{2}{4} \\
+	\ganttmilestone{Presentation to Distributed Systems Group}{4} \\
+	\ganttgroup{Experiment Implementation}{6}{13} \\
+	\ganttbar{Experiment Prototypes}{3}{6} \\
+	\ganttmilestone{Mid Project Report}{6} \\
+	\ganttbar{Configure Cluster}{6}{7} \\
+	\ganttbar{Experiment Implementation}{7}{11} \\
+	\ganttbar{Additional Requirements}{11}{13} \\
+	\ganttmilestone{Progress Meeting}{13} \\
+	\ganttgroup{Evaluation}{13}{15} \\
+	\ganttbar{Evaluation}{13}{14} \\
+	\ganttbar{Project Write-up}{14}{16} \\
+	\ganttmilestone{Deadline}{16}
+\end{ganttchart}
+\caption{Gantt Chart of Project Schedule}
+\label{originalGantt}
+\end{figure}
 
 \subsection{Milestones}
 There are a series of milestones which must be met throughout the project. This provides a framework for the project plan, as necessary tasks must be completed before the milestones.
@@ -71,9 +148,9 @@ There are a series of milestones which must be met throughout the project. This 
 
 	The presentation to the Distributed Systems and Services group provides an opportunity to get early feedback on the project, and present much of what will be present in the mid year report. In order to present the project, a sufficient amount of content must be prepared. By this point a substantial amount of background research should have been carried out, and early ideas about experimental design should be formed.
 
-	\item Mid-Year Project Report
+	\item Mid Project Report
 
-	The Mid-Year Project Report is a chance to get feedback from the assessor about the direction and progress of the project. By this stage the background research should be completed, and should demonstrate that necessary steps have been taken to understand the problem. The Aims \& Objectives should be clearly defined, with a set of deliverables, a methodology, and a schedule. At this point experimental design will not have been completed, but the Mid-Year Report should give indications about the type of experiments that will be executed and why they were chosen. Finally, evidence of basic implementation should be shown, to demonstrate knowledge of the tools required for experiment implementation. 
+	The Mid Project Report is a chance to get feedback from the assessor about the direction and progress of the project. By this stage the background research should be completed, and should demonstrate that necessary steps have been taken to understand the problem. The Aims \& Objectives should be clearly defined, with a set of deliverables, a methodology, and a schedule. At this point experimental design will not have been completed, but the Mid-Year Report should give indications about the type of experiments that will be executed and why they were chosen. Finally, evidence of basic implementation should be shown, to demonstrate knowledge of the tools required for experiment implementation. 
 
 	\item Progress Meeting
 

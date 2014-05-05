@@ -1,19 +1,115 @@
 \chapter{Project Evaluation}
+This chapter will evaluate the Final Year Project as a whole, focusing on the process, methodology and schedule of the project, and discussing its relevance to the larger research landscape.
 
 \section{Methodology Evaluation}
+Applying an Agile methodology was a key factor in successfully completing the project. The original project plan was very ambitious, and it quickly became clear that it was infeasible to complete this much work within the limited time frame of the Final Year Project. Following an Agile process was essential in prioritising the most important work, ensuring that a minimum viable amount of work was completed as quickly as possible, empirically adjusting the schedule as required throughout the project and forming contingency plans where necessary.
+
+The methodology can be deemed successful as all of the minimum requirements were met. Minimum requirements were prioritising and carried out in earlier sprints to ensure that sufficient amount of work was completed for the project. When the higher priority minimum requirements were met, the additional goals were prioritised based on their impact to the project and carried out in priority order. 
+
+Agile development provided a framework for adjusting the schedule throughout the project. Reviewing progress every week, and using this information to inform the next weeks estimates made the estimation process much more accurate. Previous weeks provided evidence of how long to realistically expect a task to take, helping to avoid continually overestimating the work that could be completed. 
 
 \subsection{Schedule Adjustments}
+Various adjustments were made to the schedule to ensure that the project was completed on time. Initially, the project was fairly ambitious in scope. Unfortunately, because of time constraints not all of the extended requirements could be met. Carrying work out in an iterative manner was key to the ability to remove work from the schedule (thereby ensuring the project could complete on time) whilst ensuring the minimum requirements were still met.
+
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+	vgrid,
+	hgrid,
+	]{1}{16}
+	\gantttitle{Project Schedule (weeks)}{16} \\
+	\gantttitlelist{1,...,16}{1} \\
+	\ganttgroup{Background Research}{1}{5} \\
+	\ganttbar{Aims \& Objectives}{1}{1} \\
+	\ganttbar{Literature Review}{2}{5} \\
+	\ganttmilestone{Presentation to Distributed Systems Group}{4} \\
+	\ganttbar{Experiment Prototypes}{4}{5} \\
+	\ganttmilestone{Mid Project Report}{6} \\
+	\ganttgroup{Experiment Implementation}{6}{13} \\
+	\ganttbar{Configure Cluster}{6}{10} \\
+	\ganttbar{Data Acquisition}{7}{9} \\
+	\ganttbar{Reverse Link Graph Development}{8}{9} \\
+	\ganttbar{PageRank Development}{10}{11} \\
+	\ganttbar{Run Experiments}{11}{14} \\
+	\ganttmilestone{Progress Meeting}{13} \\
+	\ganttgroup{Evaluation}{13}{15} \\
+	\ganttbar{Evaluation}{13}{15} \\
+	\ganttbar{Report Write-up}{14}{15} \\
+	\ganttbar{Proof Reading \& Adjustments}{16}{16} \\
+	\ganttmilestone{Deadline}{16}
+\end{ganttchart}
+\caption{Final Gantt Chart of Project Schedule}
+\label{endGantt}
+\end{figure}
+
+In comparison to the initial project estimation, setting up the cluster of machines took much longer than expected. It was expected that Hadoop and Stratosphere would be pre-installed on the Cloud Testbed, but this was not the case for Stratosphere, and Hadoop had an outdated version. The process of installing and configuring the software took longer than expected, leading to the cluster set-up to take 4 weeks, rather than the week originally predicted.
+
+In order to compensate for this, the data required for the experiments was acquired and pre-processed as the cluster was being configured. As stages in these tasks were passive (e.g. waiting for large amounts of data to download) these tasks could be performed in parallel efficiently. 
+
+Rather than performing the experiments required for the minimum requirements (e.g. Word Count or Terasort), more complex experiments were developed to better reflect the real-world usage of the data processing tools. This met an additional requirement (in addition to the minimum requirements). Implementing the more complex experiments directly and not performing the basic experiments was a more efficient use of time, with more value being gained from the advanced experiments, and time not being spent on performing the simpler experiments. 
+
+Experiments could be run in parallel to the evaluation and write-up stages, as experiments (particularly Hadoop PageRank) often took a large amount of time to finish without requiring any supervision. This left time to write up various aspects of the report, and evaluate experiments which had already been completed (for example, evaluating the results of the Reverse Link Graph experiments as PageRank was running).
+
+The project was completed slightly ahead of schedule, allowing for a week of proof reading and adjustments to the report.
 
 \section{Achievement of Aims \& Objectives}
+The stated aim of the project was to provide a reasoned and objective analysis of the efficiency of Hadoop and Stratosphere. This aim was met through meeting the following requirements.
+
+\subsection{Minimum Requirements}
+\begin{itemize}
+	\item Install Hadoop
+
+	Hadoop was installed on the Cloud Testbed.
+
+	\item Install Stratosphere
+
+	Stratosphere was installed on the Cloud Testbed.
+
+	\item Run a MapReduce processing task
+
+	In the original requirements, example exercises such as Word Counting and Terassort were discussed as potential MapReduce problems which could be used to benchmark Hadoop and Stratosphere. This requirement was met by running the Reverse Link Graph experiment on both tools. This will be discussed further in the `Real-world problem' extended requirement.
+
+	\item Run a non-MapReduce processing task
+
+	In the original requirements, K-Means clustering was discussed as a problem which could be used to compared the ability of Stratosphere and Hadoop to run problems that do not conventionally fit in to the MapReduce paradigm. This requirement was met by calculating the PageRank of the data. PageRank is an experiment included in both Hadoop libraries, and as an example in the standard distribution of Stratosphere. The code for both of these had to be modified to meet the input format.
+
+	\item Run an experiment on a different cluster size
+
+	This requirement was met, as all experiments were executed on various different cluster sizes.
+\end{itemize}
+
+\subsection{Extended Requirements}
+\begin{itemize}
+	\item Real-world problem
+
+	In the original requirements the use of a `real-world' problem was discussed as it would provide a less artificial way of evaluating Hadoop and Stratosphere. It was not possible to identify a suitable problem for various reasons. The availability and size of data were a limiting factor, as was finding an experiment with sufficient literature which did not require extensive domain specific knowledge. Due to the time constraints of the Final Year Project, it was deemed infeasible to complete a dedicated real-world problem.
+
+	Rather than running the real-world problem as a separate experiment, it was decided that the MapReduce and non-MapReduce problems should be chosen in such a way that they reflected many of the properties present in real-world scenarios. The Reverse Link Graph has various real-world applications and PageRank forms a core part of search engine technology. The PageRank experiment required code to be modified to match the input data, where the Reverse Link Graph experiment was developed from scratch.
+
+	Whilst the requirement may not have been met directly, the fundamental ideas behind the extension have been met, and the value toward the project has therefore been achieved.
+
+	\item Scale all experiments
+
+	All experiments have been run on various different cluster sizes. In addition to this, rather than simply running them on 2 different cluster sizes, each has been executed on cluster sizes of 2, 4, 6, 8 and 10 machines. This extended requirement has been met. 
+
+	The only exception to this is the PageRank algorithm on Hadoop. This was only run on 6, 8 and 10 nodes as resource constraints prevented it from working on 2 and 4 nodes. 
+
+	\item Public Cloud
+
+	Unfortunately the experiments were not completed on a public cloud. It was felt that this extended requirement had the lowest priority, as it would have a limited effect on the results of the experiments and required a significant investment of time and money. Running the same experiments on a different cloud would likely replicate the results, which provides limited value in the context of the experiment. Two areas which may have benefited from using a public cloud would be that experiments could have been run on a larger scale (for example, 16 nodes to continue the scalability experiments, or using larger data) and the resource acquisition technique of Stratosphere could have been evaluated. This has been identified as an area of potential future research.
+\end{itemize}
 
 \section{Related Work}
+A key part of evaluating the project is viewing the research in the context of previous work in the field.
 
 \subsection{Comparison to Prior Work}
+Specifically, there are two core Nephele papers which have previously studied the performance characteristics of Stratosphere (then Nephele) by comparing it to Hadoop (``Exploiting Dynamic Resource Allocation for Efficient Parallel Data Processing in the Cloud'' \cite{warneke2011exploiting} and ``Nephele/PACTs: a programming model and execution framework for web-scale analytical processing'' \cite{battre2010socc}). 
+
+The experiments carried out in this project support the performance findings of the previous work, finding that Stratosphere outperforms Hadoop in cases of both MapReduce and non-MapReduce problems, with MapReduce being particularly poor when considering iterative problems.
 
 \subsubsection{Contribution to Research}
-The work carried out in this project is intended to contribute to the existing landscape by building on the work of previous research. Specifically, there are two core Nephele papers which have previously studied the performance characteristics of Stratosphere (then Nephele) by comparing it to Hadoop (``Exploiting Dynamic Resource Allocation for Efficient Parallel Data Processing in the Cloud'' \cite{warneke2011exploiting} and ``Nephele/PACTs: a programming model and execution framework for web-scale analytical processing'' \cite{battre2010socc}). 
-
-This project attempts to reinforce the findings of these works, and to contribute to the existing body of research in the following ways
+The work carried out in this project is intended to contribute to the existing landscape by building on the work of previous research. This project attempts to contribute to the existing body of research in the following ways
 
 \begin{enumerate}
 	\item Performing experiments designed to test the scalability of tools, and how they react to changing resources. The existing research typically uses one fixed size cluster, with some prior research focusing on a comparison between a fixed Hadoop cluster and a Stratosphere cluster using automated resource acquisition. In this project, experiments have been run across varying cluster sizes, allowing a discussion of how well the tools respond to changing resources (in the form of cluster size).
@@ -24,7 +120,7 @@ This project attempts to reinforce the findings of these works, and to contribut
 \subsection{Future Work}
 There are a number of possible extensions to the project which could be tackled as future work.
 
-A particular area which was identified as an extended goal of the project was to look at the performance of the data processing tools in a public cloud environment. In particular, this work could look at the impact of the unique method in which Stratosphere can acquire resources rather than processing data on a fixed cluster size, and how this approach effects performance and scalability. 
+A particular area which was identified as an extended goal of the project was to look at the performance of the data processing tools in a public cloud environment. In particular, this work could look at the impact of the unique method in which Stratosphere can acquire resources rather than processing data on a fixed cluster size, and how this approach effects performance and scalability. The cost of public clouds, and whether the choice of data processing tool can reduce cost could also be an area of research.
 
 Various cloud providers offer hosted Platform as a Service data processing tools (typically Hadoop) which allow users to process data without worrying about manually configuring a cluster. A possible extension to this work would be to consider how this effects the performance of data processing tasks, and whether the elasticity afforded by a Platform of a Service approach is appropriate for data processing scenarios. 
 
