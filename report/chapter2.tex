@@ -191,7 +191,7 @@ A data processing job can be described as a set of tasks, where each task perfor
 A data processing task acts upon a list of records. Unlike the classic MapReduce paradigm, input is not restricted to Key/Value pairs. A record can consist of any number of fields, each which can be either a key or value. All fields must be capable of being serialized and deserialized, and fields defined as keys must be capable of being compared with other keys. 
 
 \subsubsection{Input Contract} 
-A task can be described as consisting of multiple Parallelization Units (PUs). A PU is a core block of computation which must be performed in serial. PUs are isolated from one another, and do not require communication, meaning that they can be distributed across different nodes and can be ran in parallel to one another. PACT specifies a set of Input Contracts which define how a problem is broken down into PUs. The Input Contract is therefore key in determining how the problem is parallelized and distributed between nodes.
+A task can be described as consisting of multiple Parallelization Units (PUs). A PU is a core block of computation which must be performed in serial. PUs are isolated from one another, and do not require communication, meaning that they can be distributed across different nodes and can be ran in parallel to one another. PACT specifies a set of Input Contracts which define how a problem is broken down into PUs. The Input Contract is therefore key in determining how the problem is made parallel and distributed between nodes.
 
 The PACT Programming Model provides 5 Input Contracts \cite{alexandrov2010massively}.
 
@@ -233,10 +233,12 @@ Directed Acyclic Graphs can also be composed together, by connecting the output 
 
 The classic MapReduce paradigm could be emulated by having 2 tasks, one with the Map Input Contract and another with the Reduce Input Contract (neither would have Output Contracts). The result of the Map task would be piped directly in to the Reduce task. 
 
-\subsection{Nephele}
-Nephele is the reference implementation of the PACT programming model. It is a runtime environment which takes a Directed Acyclic Graph specifying the desired data processing workflow (the Job Graph) and and compiles it in to an Execution Graph - a more concrete description with information about how the tasks will be parallelized and what types of computing resources will be used \cite{warneke2011exploiting}. 
+\subsection{Stratosphere}
+Stratosphere is the reference implementation of the PACT programming model. It is a runtime environment which takes a Directed Acyclic Graph specifying the desired data processing workflow (the Job Graph) and and compiles it in to an Execution Graph - a more concrete description with information about how the tasks will be made parallel and what types of computing resources will be used \cite{warneke2011exploiting}. 
 
-A secondary focus of the Nephele runtime is to take advantage of the opportunities afforded by Cloud Computing. The core benefit of Cloud Computing is elasticity, allowing resources to be obtained on demand. By removing the assumption that resources must be static throughout the duration of a data processing job, Nephele is able to utilise the dynamic resource allocation made possible by the cloud. This changes the emphasis of task scheduling, allowing the scheduler to determine and acquire what resources a given task needs, rather than attempting to schedule tasks depending on the resources available at the time \cite{warneke2011exploiting}.
+A secondary focus of the Stratosphere runtime is to take advantage of the opportunities afforded by Cloud Computing. The core benefit of Cloud Computing is elasticity, allowing resources to be obtained on demand. By removing the assumption that resources must be static throughout the duration of a data processing job, Stratosphere is able to utilise the dynamic resource allocation made possible by the cloud. This changes the emphasis of task scheduling, allowing the scheduler to determine and acquire what resources a given task needs, rather than attempting to schedule tasks depending on the resources available at the time \cite{warneke2011exploiting}.
+
+Stratosphere was previously known as Nephele, and research papers from the beginning of the Stratosphere project will refer to it by this name.
 
 %\section{Alternative Technologies}
 %There are various alternative data processing technologies which will not be considered in any more detail in this project. 
