@@ -176,6 +176,9 @@ This imposes limitations on the types of problem which can be solved by MapReduc
 Prominent examples of this type of algorithm can be found in Machine Learning, where problems are often iterative in nature. Iterative tasks, such as K-Means Clustering can be implemented using the MapReduce paradigm \cite{zhao2009parallel}, but often require multiple passes of the \textit{map} and \textit{reduce} functions, which causes a significant performance penalty as data must be loaded from the disk every iteration.
 
 \subsection{Hadoop}
+
+\todo{Hadoop Architecture Diagram}
+\todo{More discussion of YARN/HDFS?}
 Hadoop is an Open Source implementation of the MapReduce programming paradigm \cite{hadoop}. It consists of several modules designed to overcome the problems associated with large scale data processing. In addition to the MapReduce programming model (Hadoop MapReduce), the Hadoop platform also has a distributed file system (HDFS) and a resource management and scheduling component (Hadoop YARN). 
 
 Hadoop is a particularly popular implementation of the MapReduce interface in the data processing community, emerging as the de-facto standard implementation of MapReduce \cite{qin2013reflection}.
@@ -234,6 +237,8 @@ Directed Acyclic Graphs can also be composed together, by connecting the output 
 The classic MapReduce paradigm could be emulated by having 2 tasks, one with the Map Input Contract and another with the Reduce Input Contract (neither would have Output Contracts). The result of the Map task would be piped directly in to the Reduce task. 
 
 \subsection{Stratosphere}
+
+\todo{Stratosphere Architecture Diagram}
 Stratosphere is the reference implementation of the PACT programming model. It is a runtime environment which takes a Directed Acyclic Graph specifying the desired data processing workflow (the Job Graph) and and compiles it in to an Execution Graph - a more concrete description with information about how the tasks will be made parallel and what types of computing resources will be used \cite{warneke2011exploiting}. 
 
 A secondary focus of the Stratosphere runtime is to take advantage of the opportunities afforded by Cloud Computing. The core benefit of Cloud Computing is elasticity, allowing resources to be obtained on demand. By removing the assumption that resources must be static throughout the duration of a data processing job, Stratosphere is able to utilise the dynamic resource allocation made possible by the cloud. This changes the emphasis of task scheduling, allowing the scheduler to determine and acquire what resources a given task needs, rather than attempting to schedule tasks depending on the resources available at the time \cite{warneke2011exploiting}.

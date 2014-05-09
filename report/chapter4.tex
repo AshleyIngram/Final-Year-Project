@@ -1,8 +1,11 @@
 \chapter{Experiment Implementation}
+\centerline{\rule{149mm}{.02in}}
+\vspace{2cm}
+
 This chapter will cover the implementation details of the experiments, discussing the tools used, the deployment environment and other considerations made when running the data processing tasks.
 
 \section{Choice of Data}
-An important factor in big data problems is the nature of the data which is being processed. As discussed in the Background Reading (chapter \ref{CHAP_SECOND}) data is usually large scale, but may also be unpredictable, changing in both size and quality. It is important to choose a dataset representative of what data processing tools are usually used for, as using completely synthetic data without appropriate properties will not provide an accurate portrayal of how well the tools perform in the real world.
+An important factor in big data problems is the nature of the data which is being processed. As discussed in previous chapters, data is usually large scale. It may also be unpredictable, changing in both size and quality. It is important to choose a dataset representative of what data processing tools are usually used for, as using completely synthetic data without appropriate properties will not provide an accurate portrayal of how the tools perform in the real world.
 
 \subsection{Desirable Properties}
 There are several desirable properties which will make a dataset appropriate for use in the experiments.
@@ -43,9 +46,9 @@ The various language versions of Wikipedia are different sizes. This is allows p
 \end{itemize}
 
 \section{Data Format}
-In addition to the representation of the data (a plain text representation) the underlying format used to store this data is also important. The Hadoop File System is known to suffer from the ``Small File Problem'' \cite{hdfsSmallFiles}. The file system is designed and optimised to store large files, rather than accessing lots of smaller files. In addition to this, HDFS has a large block size. Each file takes up at least one block which is by default 1MB. This will cause a significant amount of space to be wasted if each file is stored independently (as web pages are rarely 1MB in size).
+In addition to the representation of the data (a plain text representation) the underlying format used to store this data is also important. The Hadoop File System is known to suffer from the ``Small File Problem'' \cite{hdfsSmallFiles}. The file system is designed and optimised to store large files, rather than accessing lots of smaller files. In addition to this, HDFS has a large block size. Each file takes up at least one block which is by default 1MB. This will cause a significant amount of space to be wasted if each file is stored independently (as individual web pages are rarely as large as 1MB in size).
 
-The choice was taken to pre-process the data used in the experiments in order to overcome the small file problem. Whilst this represents an inherent limitation of the technology used, it effects both Stratosphere and Hadoop equally (as both use HDFS) and therefore will not have a dramatic effect on the conclusions drawn from the experiments. It will also allow both data processing technologies a chance to perform in ideal circumstances, rather than limiting them by the choice of data. This may not reflect a real-world implementation of the processing tasks, as this pre-processing step may be prohibitively expensive in larger datasets (for example, if the whole World Wide Web was being considered).
+The choice was taken to pre-process the data used in the experiments in order to overcome the small file problem. Whilst this represents an inherent limitation of the technology used, it affects both Stratosphere and Hadoop equally (as both use HDFS) and therefore will not have a dramatic effect on the conclusions drawn from the experiments. It will also allow both data processing technologies a chance to perform in ideal circumstances, rather than limiting them by the choice of data. This may not reflect a real-world implementation of the processing tasks, as this pre-processing step may be prohibitively expensive in larger datasets (for example, if the whole World Wide Web was being considered).
 
 The pre-processing step combines the small files together into a larger file, which can then be processed accordingly.
 
@@ -55,22 +58,23 @@ A SequenceFile is a Hadoop-specific binary file format which stores Key/Value pa
 Unfortunately, the Stratosphere implementation of the SequenceFile input format was felt to be too immature for use in the experiments, and therefore the use of a SequenceFile to represent data was deemed unsuitable.
 
 \subsection{CSV}
-CSV (Comma-separated values) is a plain-text method of representing tabular data. CSV is a well established method of storing data, and while it lacks an official standard tools which process CSV data typically follow RFC 4180 \cite{rfc4180}. As an open and accepted data format, CSV is well supported by both Hadoop and Stratosphere. The relative simplicity of the format also makes it feasible to implement a basic parser where necessary. 
+CSV (Comma-separated values) is a well established plain-text method of representing tabular data. While it lacks an official standard, tools which process CSV data typically follow RFC 4180 \cite{rfc4180}. As an open and accepted data format, CSV is well supported by both Hadoop and Stratosphere. The relative simplicity of the format also makes it feasible to implement a basic parser where necessary. 
 
 Data was stored in CSV format as Key/Value pairs, with the key being the page filename, and the value being the contents of the file. This mirrors the way the data was stored in a SequenceFile, but in a more widely accepted file format. 
 
 \section{Deployment Environment}
+\todo{Diagram from Distributed Systems slides}
 All experiments were run using the Leeds University School of Computing Cloud Testbed. The Cloud Testbed is a private cloud consisting of 6 machines, controlled using the OpenNebula toolkit. Virtual machines can be created as required, and this capability was used to add resources to the data processing tools. 
 
 \subsection{Node Specifications}
 The Cloud Testbed allows the creation of Virtual Machines with fixed resources. The virtual machines are each permitted 1 virtual processor core and 1GB of memory. This allows the virtual machines to have a consistent level of performance, limiting the effect of load on the underlying hardware. The physical hardware the virtual machines execute on have Intel Xeon Quad Core processors (X3360) and 4GB of memory.
 
-The Cloud Testbed allows for up to 10 virtual machines to be created per user. Whilst data processing software such as Hadoop has been designed to use large numbers of nodes, and this cluster size may be smaller than in some real-world applications of Hadoop, significantly smaller cluster sizes are used in practice. For example, Amazon limit users of their MapReduce service to 20 nodes, and require anybody exceeding that usage to request a higher quota \cite{emrlimits}. This approach is consistent with previous research in the field \cite{warneke2011exploiting}.
+The Cloud Testbed allows for up to 10 virtual machines to be created per user. Whilst data processing software such as Hadoop has been designed to use large numbers of nodes and this cluster size may be smaller than in some real-world applications of Hadoop, significantly smaller cluster sizes are used in practice. For example, Amazon limit users of their MapReduce service to 20 nodes, and require anybody exceeding that usage to request a higher quota \cite{emrlimits}. This cluster size is consistent with previous research in the field \cite{warneke2011exploiting}.
 
-The resources provided by the Cloud Testbed are not ideal hardware for running large scale data processing problems, which typically require large amounts of memory. Whilst this will undoubtedly impact the performance of the experiments, the environment is consistent for both Hadoop and Stratosphere, and shouldn't affect the comparison of the tools.
+The resources provided by the Cloud Testbed are not ideal hardware for running large scale data processing problems, which typically require large amounts of memory. Whilst this will undoubtedly impact the performance of the experiments, the environment is consistent for both Hadoop and Stratosphere, and should not affect the comparison of the tools.
 
 \subsection{Software}
-Hadoop version 2.3.0 and Stratosphere version 0.5 were installed on the cluster. At present these are the latest versions of both software packages. Stratosphere was configured to use HDFS in order to limit the effect that the file system had on the experiments. The version of Stratosphere installed was not dependant on YARN, as it was felt this would limit the effectiveness of testing scalability.
+Hadoop version 2.3.0 and Stratosphere version 0.5 were installed on the cluster. At present these are the latest versions of both software packages. Stratosphere was configured to use HDFS in order to limit the effect that the file system had on the experiments. The version of Stratosphere installed was not dependent on YARN, as it was felt this would limit the effectiveness of testing scalability.
 
 The data was loaded into HDFS before the experiments, and this was not included in runtime calculation. This limits the cost of communication overhead, as the data is already distributed across nodes appropriately, rather than data having to be transferred at the start of experiments. 
 
@@ -142,7 +146,7 @@ The reduce step relies on the runtime (either Hadoop or Stratosphere) to group t
 \end{figure}
 
 \section{PageRank}
-PageRank is a more complex algorithm than the Reverse Link Graph computation, and benefits from the more advanced features of PACT. In particular as an iterative algorithm, the PageRank algorithm benefits from having that functionality built-in to Stratosphere. 
+PageRank is a more complex algorithm than the Reverse Link Graph computation, and benefits from the more advanced features of PACT. In particular as an iterative algorithm, the PageRank algorithm benefits from having iteration functionality built-in to Stratosphere. 
 
 As Hadoop lacks some of the necessary operations to implement PageRank in an ideal way, the algorithm was implemented in twice, with the different technologies having different implementation styles. For Stratosphere, all of the features available to PACT were used, whereas with Hadoop the implementation is limited to being expressed in a MapReduce fashion.
 
@@ -151,7 +155,7 @@ The PageRank experiment was run a number of times to give an average runtime per
 For both implementations the PageRank algorithm ran for 3 iterations. This was in order to provide a fair illustration of how well iterative algorithms perform in both technologies, whilst not being prohibitively time consuming (especially on smaller cluster sizes).
 
 \subsection{Stratosphere Implementation}
-The stratosphere implementation of PageRank was the `ideal' implementation, as it has a number of operations required by the PageRank algorithm. 
+The stratosphere implementation of PageRank was the `ideal' implementation, as it has native support for a number of operations required by the PageRank algorithm. 
 
 The first step in the process was to take the input data from the data source, and build the Reverse Link Graph. The PageRank algorithm determines the rank of a page by considering other pages which link to it, which requires the Reverse Link Graph to be computed. 
 

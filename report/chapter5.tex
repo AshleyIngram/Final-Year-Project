@@ -1,4 +1,7 @@
 \chapter{Technical Evaluation}
+\centerline{\rule{149mm}{.02in}}
+\vspace{2cm}
+
 As discussed in the Experiment Design and Implementation sections, each problem was run on both Hadoop and Stratosphere with a varying number of nodes. The same data was used for all of the experiments, and a runtime average was taken to provide the best possible indication of each tools performance.
 
 This chapter provides a technical analysis of the results gained from experimentation, and relates them back to the hypothesis.
@@ -6,7 +9,7 @@ This chapter provides a technical analysis of the results gained from experiment
 \section{Reverse Link Graph}
 
 \subsection{Hadoop}
-The Hadoop implementation of the Reverse Link Graph is important as a benchmark against which other experiments can be judged. The performance of Hadoop in MapReduce situations is a well-known quantity, as it is the most widely used data processing technology. This provides a clear metric against which the performance of Stratosphere can be evaluated, whilst also serving to illustrate how well Hadoop performs MapReduce tasks in comparison to non-MapReduce tasks.
+The Hadoop implementation of the Reverse Link Graph is important as a benchmark against which other experiments can be judged. The performance of Hadoop in MapReduce situations is well known, as it is the most widely used data processing technology. This provides a clear metric against which the performance of Stratosphere can be evaluated, whilst also serving to illustrate how well Hadoop performs MapReduce tasks in comparison to non-MapReduce tasks.
 
 \begin{figure}[H]
 \centering
@@ -32,9 +35,9 @@ The Hadoop implementation of the Reverse Link Graph is important as a benchmark 
 	\label{hadoopRLGRuntime}
 \end{figure}
 
-The Hadoop implementation of the Reverse Link Graph problem shows the general properties expected from the data. As the number of nodes increases, the runtime decreases as having a larger amount of resources allows more work to be processed in parallel. This trend reverses when the experiment is executed on 10 machines. This typically indicates that a point has been reached where a problem no longer benefits from adding additional parallel resources, and it becomes more costly to run on a larger number of machines because of communications overhead. The impact of Amdahl's law \cite{amdahl1967validity} is not indicative of a problem with Hadoop, and is likely caused by the size of the data, as discussed in the Experiment Implementation section.
+The Hadoop implementation of the Reverse Link Graph problem shows the general properties expected. As the number of nodes increases, the runtime decreases as having a larger amount of resources allows more work to be processed in parallel. This trend reverses when the experiment is executed on 10 machines. This typically indicates that a point has been reached where a problem no longer benefits from adding additional parallel resources, and it becomes more costly to run on a larger number of machines because of communications overhead. The impact of Amdahl's law \cite{amdahl1967validity} is not indicative of a problem with Hadoop, and is likely caused by the size of the data, as discussed in the Experiment Implementation section.
 
-The expected trend of performing scaling near-linearly as the number of machines increases can be seen more clearly in figure \ref{hadoopRLGScalability}. This exhibits the expected behaviour that the runtime nearly halves as the number of machines is doubled. As expected, the runtime is not quite linear as there is some communications overhead added by adding more machines to the cluster. This reflects the change that can be seen in figure \ref{hadoopRLGRuntime} toward the end of the plot. Figure \ref{hadoopRLGScalability} does not show the more dramatic decrease in performance that can be seen when the experiment is run on 10 machines, as it only features the runtime for 2, 4 and 8 nodes. This effect would be shown if the experiment was performed on 16 nodes.
+The expected trend of performance scaling near-linearly as the number of machines increases can be seen more clearly in figure \ref{hadoopRLGScalability}. This exhibits the expected behaviour that the runtime nearly halves as the number of machines is doubled. As expected, the runtime is not quite linear as there is some communications overhead added by adding more machines to the cluster. This reflects the change that can be seen as the experiment runs on 10 nodes, which has a larger runtime than 8 nodes. Figure \ref{hadoopRLGScalability} does not show the more dramatic decrease in performance that can be seen when the experiment is run on 10 machines, as it only features the runtime for 2, 4 and 8 nodes. This effect would be shown if the experiment was performed on 16 nodes.
 
 \begin{figure}[H]
 	\centering
@@ -43,7 +46,7 @@ The expected trend of performing scaling near-linearly as the number of machines
 	\label{hadoopRLGScalability}
 \end{figure}
 
-Another important factor of figure \ref{hadoopRLGRuntime} is the error bars, indicating the standard deviation of runtime. The standard deviation is initially fairly high, as the experiments take a (relatively) long time to run. As the number of machines increases, there becomes less room for error as the time taken is decreased. 
+Another important factor of figure \ref{hadoopRLGRuntime} is the error bars, indicating the standard deviation of runtime. The standard deviation is initially fairly high, indicating that the runtime is fairly unpredictable. This does not significantly impact the results, as there is still little overlap between the results for different nodes.
 
 \subsection{Stratosphere}
 The Stratosphere implementation of the Reverse Link Graph experiment allows a comparison of how well it can perform standard MapReduce tasks in comparison to Hadoop. 
@@ -122,7 +125,7 @@ Unfortunately, due to resource constraints on the cluster, it was not possible t
 	\caption{Hadoop PageRank Runtime}
 \end{figure}
 
-Despite using the same dataset, PageRank is much less efficient to compute in Hadoop than the Reverse Link Graph is. This can be seen clearly in figure \ref{hadoopRLGvPR}. Whilst it can be expected that PageRank will take longer to compute (with the Reverse Link Graph being a component of PageRank) the size of the difference shows that Hadoop is sub-optimal when performing iterative algorithms. A large part of this is that each iteration is implemented as a number of Map and Reduce steps. There is overhead for every MapReduce job submitted to Hadoop, as it must schedule the work across nodes, load the appropriate data, perform the computation and write the intermediate data to disk before moving on to the next step in the process. The overhead of this process would be less significant where larger data sizes are used, but would increase as more iterations were used (requiring more Map and Reduce steps), and as the cluster size increases (increasing the associated start up time). 
+Despite using the same dataset, PageRank is much less efficient to compute in Hadoop than the Reverse Link Graph. This can be seen clearly in figure \ref{hadoopRLGvPR}. Whilst it can be expected that PageRank will take longer to compute (with the Reverse Link Graph being a component of PageRank) the size of the difference shows that Hadoop is sub-optimal when performing iterative algorithms. A large part of this is that each iteration is implemented as a number of Map and Reduce steps. There is overhead for every MapReduce job submitted to Hadoop, as it must schedule the work across nodes, load the appropriate data, perform the computation and write the intermediate data to disk before moving on to the next step in the process. The overhead of this process would be less significant where larger data sizes are used, but would increase as more iterations were used (requiring more Map and Reduce steps), and as the cluster size increases (increasing the associated start up time). 
 
 \begin{figure}[H]
 	\centering
@@ -223,8 +226,8 @@ When this is calculated for the Reverse Link Graph experiment it yields the foll
 This indicates that the hypothesis is correct. With both Hadoop and Stratosphere the algorithms get roughly $75\%$ faster when the processor count doubles. This is sub-linear (i.e. not $100\%$) owing to communication overhead, and other inherently serial factors in execution. As with all parallel algorithms, there is a point at which the serial cost of adding new nodes outweighs the benefit they give to the computation. This process is clear with Stratosphere as the number of processors increases, as the runtime is shorter causing serial elements to take up a greater proportion of the computation.
 
 \section{Conclusion}
-Several experiments have been designed and performed with the aim of determining whether Stratosphere can perform better than Hadoop, and whether the generalised execution framework that PACT provides has any real benefits of Hadoop. 
+Several experiments have been designed and performed with the aim of determining whether Stratosphere can perform better than Hadoop, and whether the generalised execution framework that PACT provides has any tangible benefits over the MapReduce paradigm. 
 
-The results of these experiments have shown that Stratosphere outperforms Hadoop in cases where a problem both can and cannot be clearly expressed as MapReduce problem, with PACT playing a key role in enabling these performance improvements. 
+The results of these experiments have shown that Stratosphere outperforms Hadoop in cases where a problem both can and cannot be clearly expressed as MapReduce problem, with PACT playing a key role in enabling these performance improvements in iterative scenarios. 
 
 Whilst this indicates that Stratosphere is a more efficient tool in the general case for large scale data processing, there are several other considerations that should be made when choosing a tool for real-world applications.

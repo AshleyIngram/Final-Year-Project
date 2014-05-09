@@ -1,10 +1,13 @@
 \chapter{Experiment Design}
+\centerline{\rule{149mm}{.02in}}
+\vspace{2cm}
+
 A series of experiments have been designed in order to objectively analyse the efficiency of Stratosphere and Hadoop. This section discusses the design of the experiments in regards to the aims of the project.
 
 Experiments are designed in a modular fashion, enabling a subset of them to be completed whilst still providing relevant research results. This approach was taken to limit the risk that is introduced by the time constraints of the project. 
 
 \section{Experiment Variables}
-There are a total of 30 experiments with 3 varying factors, in order to test the data processing tools in a range of relevant scenarios. 
+There are a series of factors which will be varied in the experiments, in order to provide a comprehensive answer to the research questions.
 
 \subsection{Data Processing Tools}
 The first factor that will be varied is the tool used to process the data. This relates to the first two research goals: providing a comparison of the MapReduce and PACT programming paradigms, and ascertaining how well Stratosphere can perform MapReduce tasks.
@@ -15,12 +18,12 @@ Hadoop is an open source implementation of the MapReduce paradigm, which has bec
 Experiments will be run in Hadoop to provide an indication of the efficiency for the current state of the art in data processing. This provides a reference point to which alternative data processing technologies can be compared. 
 
 \subsubsection{Stratosphere (PACT)}
-Stratosphere is a tool which implements the PACT programming paradigm, which as a superset of MapReduce can also perform tasks in a MapReduce style. This means that experiments can be implemented using the same tool, but in different programming paradigms, allowing a fair test of PACT vs MapReduce. This is designed to answer the first research question, namely whether or not PACT overcomes the inherent disadvantages of the MapReduce paradigm.
+Stratosphere is a tool which implements the PACT programming paradigm, which is a superset of MapReduce. This means there is a range of tasks that can be solved more expressively using a Directed Acyclic Graph and the range of extra operators that PACT provides.
 
-In a broader sense, it allows a complete comparison of Hadoop and Stratosphere. In real-world data processing scenarios, users of Stratosphere would be unlikely to restrict their programming options to just MapReduce, and would be likely to use other aspects of PACT as appropriate. Running experiments in the same way allows a fairer comparison of the 2 tools, where all of their functionality is available.
+Using all of the available features of PACT allows a complete comparison of Hadoop and Stratosphere. In real-world data processing scenarios, users of Stratosphere would be unlikely to restrict their programming options to just MapReduce, and would be likely to use other aspects of PACT as appropriate. Running experiments in this way allows a fairer comparison of the 2 tools, where all of their functionality is available.
 
 \subsubsection{Stratosphere (MapReduce)}
-Experiments will also be run using just the Map and Reduce operations of Stratosphere. Whilst Stratosphere has a wider set of operations, solving data processing tasks using just Map and Reduce allows Stratosphere and Hadoop to be directly compared, aiming to answer the second research question. If Stratosphere can perform MapReduce tasks with comparable efficiency to Hadoop, it will indicate that Stratosphere is a more efficient tool for large-scale data processing in general, not just for those situations where a problem cannot be formulated in terms of MapReduce.
+One experiment will be run using just the Map and Reduce operations of Stratosphere. Whilst Stratosphere has a wider set of operations, solving data processing tasks using just Map and Reduce allows Stratosphere and Hadoop to be directly compared, aiming to answer the second research question. If Stratosphere can perform MapReduce tasks with comparable efficiency to Hadoop, it will indicate that Stratosphere is a more efficient tool for large-scale data processing in general, not just for those situations where a problem cannot be formulated in terms of MapReduce.
 
 \subsection{Data Processing Task}
 The second varying factor will be the data processing task that the tools have to complete. The tasks have been chosen to represent real-world issues as closely as possible, to give an indication of performance in scenarios where the tools are likely to be used, rather than having synthetic benchmarks such as word counting or Terasort. 
@@ -52,15 +55,14 @@ The elasticity of the Cloud will be required to scale the size of the cluster fo
 Measurements will be taken from the experiments in order to give quantitative metrics which can be used for objective analysis.  
 
 \subsection{Runtime}
-Runtime is the length of time that a program (or data processing task) takes to execute. Runtime is one of the primary mechanisms for determining the efficiency of the data processing solutions. The time it takes to perform a task is a key element in large scale data processing, as the sheer scale of data can cause operations to take a long period of time. 
+Runtime is the length of time that a program (or data processing task) takes to execute. Runtime is one of the primary mechanisms for determining the efficiency of the data processing solutions. The time it takes to perform a task is a key element in large scale data processing, as the sheer size of data can cause operations to take a long period of time. 
 
 \subsection{Scalability}
 The Scalability of data processing tools is also a key metric in determining how efficient they are. The scalability of a system refers to how well it accommodates additional resources \cite{bondi2000characteristics}, such as additional machines. 
 
-In the context of Data Processing tools such as Hadoop and Stratosphere, it is desirable for systems to be able to scale according to both the size of data, and the number of nodes in the cluster. A data processing tool should be able to handle any amount of data, providing that it has the correct amount of system resources. Indeed, this is what distinguishes tools like Hadoop from other data processing tools such as numpy - the ability to analyse petabytes of data. A Data Processing system should also be able to scale according to the number of nodes added. There should be no upper limit to the number of nodes in a cluster, as this provides an important mechanism of adding the necessary resources to handle larger processing tasks. Adding a large number of nodes with lesser resources may be more cost efficient than adding fewer nodes which have comparatively larger system resources. This may be a reason why many users that engage in large scale data processing build clusters from commodity components \cite{taylor2010overview}.  
+In the context of Data Processing tools such as Hadoop and Stratosphere, it is desirable for systems to be able to scale according to both the size of data, and the number of nodes in the cluster. A data processing tool should be able to handle any amount of data, providing that it has the correct amount of system resources. Indeed, this is what distinguishes tools like Hadoop from other data processing tools such as NumPy \cite{numpy} - the ability to analyse petabytes of data. A Data Processing system should also be able to scale according to the number of nodes added. There should be no upper limit to the number of nodes in a cluster, as this provides an important mechanism of adding the necessary resources to handle larger processing tasks. Adding a large number of nodes with lesser resources may be more cost efficient than adding fewer nodes which have comparatively larger system resources. This may be a reason why many users that engage in large scale data processing build clusters from commodity components \cite{taylor2010overview}.  
 
-% TODO: Is the derivative acceptable?
-The specific type of scalability that will be considered in these experiments is Runtime Scalability. Intuitively, as nodes are added to the cluster the runtime for experiments should decrease as work can be partitioned out to a larger set of working nodes. In an ideal world, this would follow a linear progression; as the number of processors is doubled the runtime should be halved. This can be measured by taking the runtime of a task when the processor count doubles (so the processor count is $2^{p}$ where $p$ is an integer representing the processor count) and taking the derivative. 
+The specific type of scalability that will be considered in these experiments is Runtime Scalability. Intuitively, as nodes are added to the cluster the runtime for experiments should decrease as work can be partitioned out to a larger set of working nodes. In an ideal world, this would follow a linear progression; as the number of processors is doubled the runtime should be halved. This can be measured by taking the runtime of a task when the processor count doubles (so for 2, 4, 8, etc nodes) and comparing the results.
 
 \subsection{Alternative Measurements}
 Various alternative mechanisms could be used to determine the efficiency of the data processing tools. The scope of the project will be limited to measuring the runtime and runtime scalability, but some other measurements which could be used are as follows.
@@ -68,21 +70,27 @@ Various alternative mechanisms could be used to determine the efficiency of the 
 \subsubsection{Data Scalability}
 It is important for clusters to be able to deal with large amounts of data in a reasonably efficient manner. A further test of scalability would be to test the cluster with various different datasets of different sizes. As with runtime scalability, this would ideally be linear, so that when the size of the data is doubled, runtime would also approximately double. The data processing tools may be of less use if the runtime increase is larger (for example, an exponential increase in runtime) as this would make running tasks on petabytes of data unreasonable.
 
+Data scalability will not be measured in this project because of time and resource constraints. The virtual machines running the data processing cluster have relatively modest resources, and experiments have to run on 2 nodes. This limits the size of datasets. Acquiring and pre-processing large amounts of data also takes a significant amount of time, making it infeasible for a Final Year Project.
+
 \subsubsection{Resource Utilisation}
 The resources used on nodes can be measured to determine how efficient the data processing tool is. An efficient data processing tool could be defined as one which uses the resources of each node effectively, by utilising a high amount of memory and CPU capacity. This would indicate that the data processing tool is using each node to the highest capacity possible, rather than requiring extra nodes to be added for more resources to become available.
 
 The utilisation of the network can also be used in determining efficiency, as a significant factor in how well a system scales is how much it communicates with other nodes. Larger amounts of communication overhead will increase the runtime of a system as it scales. Measuring the network overhead gives an indication of how much nodes communicate with each other, therefore giving an indication of communication overhead and scalability.
+
+Resource Utilisation will not be measured in this project due to the nature of the cluster. Resources such as CPU are shared with other virtual machines on the same physical hardware, and the cluster does not have virtual networking enabled. This makes it difficult to get a reliable measure of resource utilisation without the results being influenced by external factors.
 
 \subsubsection{Cost}
 Another metric which can be used to compare data processing tools is cost efficiency. In situations where a cluster is being built using Cloud Computing services, running data processing jobs will cost on a per-usage basis. Depending on the runtime scalability, it may be more cost efficient to run a job on a larger number of nodes (so that it completes faster), versus running it on a smaller number of nodes (which will take longer, but cost less per hour). 
 
 It may also be more cost efficient to create a private cluster of machines to run data processing jobs, rather than using a pay-per-usage cloud model.
 
+Cost will not be used as an evaluation measure for this project, as it is mainly relevant in public cloud scenarios, and it would be difficult to measure the cost of creating a dedicated data processing cluster without very specific data processing requirements. 
+
 \section{Hypothesis}
 The project as a whole focuses on answering 3 core research questions. Rather than hypothesising the result to each individual experiment, there will be a prediction for each research question. Each experiment is used as a way of gathering information to answer one of the three core questions, and as such the results to individual experiments can be inferred from the broader descriptions.
 
 \tocless\subsection{Does PACT overcome the inherent disadvantages of the MapReduce paradigm?}
-In order to determine whether PACT overcomes the inherent disadvantages of MapReduce, both tools will solve the PageRank problem; a data processing task which exhibits many of the features generally considered to be a poor fit for MapReduce.
+In order to determine whether PACT overcomes the inherent disadvantages of MapReduce, both tools will solve the PageRank problem, a data processing task which exhibits many of the features generally considered to be a poor fit for MapReduce.
 
 It is likely that PACT will demonstrate a clear superiority over MapReduce in these situations by having a smaller runtime, regardless of the number of nodes that are used to process the data. The presence of dedicated PACT operators for both iteration and delta-iteration will be a significant benefit for PACT, as PageRank is a naturally iterative algorithm. Additionally, PACT provides operators for joins, which are used throughout the PageRank algorithm. This will allow the Stratosphere runtime to optimise these steps accordingly.
 
@@ -98,7 +106,7 @@ In these situations Hadoop should be the clear winner in terms of performance. I
 Stratosphere is also a relatively immature project in comparison to Hadoop. It has existed for far less time, and therefore has less contributions. It is a less visible project than Hadoop, and has been used less in production. On this basis it can be reasoned that Stratosphere will have had less development attention towards optimising the Map and Reduce processes, and will therefore have inferior performance with these tasks.
 
 \tocless\subsection{How do Hadoop and Stratosphere perform in a highly elastic Cloud Computing \\ environment?}
-An important factor in how suitable data processing tools are to large scale data sets is how well they scale. This is particularly important in Cloud Computing environments. In order to evaluate how well the tools scale, both the Reverse Link Graph experiment and the PageRank experiment will be run using a varying number of nodes, with the difference in runtime evaluated to determine how well adding additional resources impacts the data processing tools. 
+An important factor in how suitable data processing tools are to large scale data sets is how well they scale. This is particularly important in Cloud Computing environments. In order to evaluate how well the tools scale experiments will be run using a varying number of nodes, with the difference in runtime evaluated to determine how well the data processing tools respond to having additional resources available. 
 
 Both Stratosphere and Hadoop (and in a broader sense, PACT and MapReduce) are based on stateless functions being distributed across nodes, evaluating data massively in parallel. Because of the nature of this model, communication overhead (the primary cause of parallel overhead) should be minimised during the primary processing time of the tools. It can therefore be expected that both Stratosphere and Hadoop will increase in a generally linear fashion.
 

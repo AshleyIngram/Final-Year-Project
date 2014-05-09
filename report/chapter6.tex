@@ -1,4 +1,7 @@
 \chapter{Project Evaluation}
+\centerline{\rule{149mm}{.02in}}
+\vspace{2cm}
+
 This chapter will evaluate the Final Year Project as a whole, focusing on the process, methodology and schedule of the project, and discussing its relevance to the larger research landscape.
 
 \section{Methodology Evaluation}
@@ -11,7 +14,7 @@ Agile development provided a framework for adjusting the schedule throughout the
 \subsection{Schedule Adjustments}
 Various adjustments were made to the schedule to ensure that the project was completed on time. Initially, the project was fairly ambitious in scope. Unfortunately, because of time constraints not all of the extended requirements could be met. Carrying work out in an iterative manner was key to the ability to remove work from the schedule (thereby ensuring the project could complete on time) whilst ensuring the minimum requirements were still met.
 
-
+\todo{Change to be adjusted from modified gantt chart}
 \begin{figure}[H]
 \centering
 \begin{ganttchart}[
@@ -59,11 +62,11 @@ The stated aim of the project was to provide a reasoned and objective analysis o
 \subsection{Minimum Requirements}
 \begin{itemize}
 	\item Install Hadoop
-
+	\todo{More?}
 	Hadoop was installed on the Cloud Testbed.
 
 	\item Install Stratosphere
-
+	\todo{More here too?}
 	Stratosphere was installed on the Cloud Testbed.
 
 	\item Run a MapReduce processing task
@@ -108,6 +111,8 @@ Specifically, there are two core Nephele papers which have previously studied th
 
 The experiments carried out in this project support the performance findings of the previous work, finding that Stratosphere outperforms Hadoop in cases of both MapReduce and non-MapReduce problems, with MapReduce being particularly poor when considering iterative problems.
 
+\todo{Table of comparison (here or in contribution?)}
+
 \subsubsection{Contribution to Research}
 The work carried out in this project is intended to contribute to the existing landscape by building on the work of previous research. This project attempts to contribute to the existing body of research in the following ways
 
@@ -118,6 +123,7 @@ The work carried out in this project is intended to contribute to the existing l
 \end{enumerate}
 
 \subsection{Future Work}
+\todo{Bullet Points!}
 There are a number of possible extensions to the project which could be tackled as future work.
 
 A particular area which was identified as an extended goal of the project was to look at the performance of the data processing tools in a public cloud environment. In particular, this work could look at the impact of the unique method in which Stratosphere can acquire resources rather than processing data on a fixed cluster size, and how this approach effects performance and scalability. The cost of public clouds, and whether the choice of data processing tool can reduce cost could also be an area of research.
@@ -125,3 +131,5 @@ A particular area which was identified as an extended goal of the project was to
 Various cloud providers offer hosted Platform as a Service data processing tools (typically Hadoop) which allow users to process data without worrying about manually configuring a cluster. A possible extension to this work would be to consider how this effects the performance of data processing tasks, and whether the elasticity afforded by a Platform of a Service approach is appropriate for data processing scenarios. 
 
 An alternative direction would be to look at other, more specialised data processing tools which are designed to process certain types of data (for example, large scale graph processing tools). 
+
+\todo{Full conclusion chapter}

@@ -9,6 +9,13 @@ This project will aim to provide a reasoned and objective evaluation of the effi
 
 Specifically, the data processing tools Hadoop and Stratosphere will be compared, allowing comparison of the individual tools, and a wider discussion of the pros and cons of the MapReduce and PACT programming paradigms. 
 
+\subsection{Motivation}
+In recent times the amount of data generated and stored by industry and academia has grown considerably. This has led to a series of tools being developed to make it feasible to analyse large amounts of information and reach meaningful conclusions. In particular the MapReduce paradigm (and the Hadoop implementation) have emerged as the prominent tools for processing large amounts of data in parallel.
+
+There are several issues with MapReduce. The most significant of these is that it is not possible to represent some tasks in such a way that it is efficient to compute the result whilst being limited to just the Map and Reduce operations. This makes it unreasonable to use Hadoop for a whole category of problems. 
+
+Clearly there is a need for a more flexible data processing framework which can solve a wider range of problems. Fortunately, MapReduce is not the only paradigm for this type of problem. The motivation behind this piece of work is to show that an alternative programming framework (PACT) can provide a reasonable way of solving tasks in the category of problems that MapReduce cannot, and to determine whether an alternative data processing paradigm and framework can remove some of the restrictions on large scale data processing. 
+
 \subsection{Research Questions}
 The project aims to answer the following questions:
 
@@ -106,37 +113,47 @@ The extended requirements provide extensions to the project which constitute wor
 \section{Schedule}
 The project schedule will be created around a set of fixed milestones in the project process. Work will be allocated in weekly sprints to ensure that the relevant work is completed in time for each milestone. Work will be prioritised so that scope can be cut to meet a milestone if required.
 
-Figure \ref{originalGantt} is a Gantt chart representing the predicted schedule for the project. At this stage it is left intentionally vague, as more information will become available as the initial stages of the project are completed. For example, there is time allocated for Experiment Implementation and Additional Requirements, rather than actual individual experiments or work required to complete specific additional requirements.
+\subsection{Project Tasks}
+There are various high level tasks throughout the project which must be carried out in order to complete the research. Whilst the Project Milestones are fairly generic and apply to all Final Year Projects, the tasks taken to achieve these milestones are specific to this project.
 
-\begin{figure}[H]
-\centering
-\begin{ganttchart}[
-	vgrid,
-	hgrid,
-	]{1}{16}
-	\gantttitle{Project Schedule (weeks)}{16} \\
-	\gantttitlelist{1,...,16}{1} \\
-	\ganttgroup{Background Research}{1}{6} \\
-	\ganttbar{Aims \& Objectives}{1}{1} \\
-	\ganttbar{Literature Review}{2}{4} \\
-	\ganttmilestone{Presentation to Distributed Systems Group}{4} \\
-	\ganttgroup{Experiment Implementation}{6}{13} \\
-	\ganttbar{Experiment Prototypes}{3}{6} \\
-	\ganttmilestone{Mid Project Report}{6} \\
-	\ganttbar{Configure Cluster}{6}{7} \\
-	\ganttbar{Experiment Implementation}{7}{11} \\
-	\ganttbar{Additional Requirements}{11}{13} \\
-	\ganttmilestone{Progress Meeting}{13} \\
-	\ganttgroup{Evaluation}{13}{15} \\
-	\ganttbar{Evaluation}{13}{14} \\
-	\ganttbar{Project Write-up}{14}{16} \\
-	\ganttmilestone{Deadline}{16}
-\end{ganttchart}
-\caption{Gantt Chart of Project Schedule}
-\label{originalGantt}
-\end{figure}
+\begin{enumerate}
+	\item Determine Aims
 
-\subsection{Milestones}
+	The project aims will state what will be achieved in the project. This is a necessary prerequisite for choosing the experiments. 
+
+	\item Choose Experiments
+
+	Experiments will be chosen based on their relevancy to the project aims, in order to meet the objectives. The number, type and reason for experiments need to be determined.
+
+	\item Design/Prototype Experiments
+
+	The background research indicates that it is possible to test Hadoop and Stratosphere processing jobs `locally' (without requiring a full cluster). This will be useful in learning the development tools and technologies. It will also be an opportunity to begin to implement some of the code required for the experiments, and verify it on a small synthetic dataset. This process should be faster than running a full experiment, and will validate that the code is correct.
+
+	The prototyping phase can therefore be used as an opportunity to design the experiments which will be executed on the full cluster, as at this point the necessary information should be available to determine what is feasible.
+
+	\item Configure Cluster
+
+	The Hadoop and Stratosphere clusters will need to be configured on the School of Computing Cloud Testbed, and also potentially on a public cloud. This is a necessary step in running the experiments.
+
+	\item Acquire Data
+
+	A real dataset will need to be acquired for use in the experiments. Where the prototypes will run on smaller, synthetic datasets, the real experiments will need a full dataset to analyse. The data will be different depending on the experiment. In some situations, data can be generated (for example, if K-Means clustering is used, data could simply be generated to the required size) whereas in other scenarios data will need to be acquired from an alternative source. If the additional requirement for a `real-world problem' is met, this will require an associated real-world data source.
+
+	\item Implement Experiments
+
+	The chosen experiments should be implemented for all platforms. Whilst it can be expected that some of the experiments would have been implemented during the prototyping phase, this step will be necessary to ensure that the prototype code is suitable for the cluster and that it can process the data which has been acquired. It will also provide an opportunity to implement any experiments which were designed but not developed during the prototyping phase.
+
+	\item Run Experiments
+
+	The experiments will be run across all platforms and technologies, and the results collected.
+
+	\item Evaluate Data
+
+	The data stemming from the experiments will be evaluated to reach meaningful conclusions relevant to the Aims \& Objectives.
+
+\end{enumerate}
+
+\subsection{Project Milestones}
 There are a series of milestones which must be met throughout the project. This provides a framework for the project plan, as necessary tasks must be completed before the milestones.
 
 \begin{enumerate}
@@ -161,10 +178,76 @@ There are a series of milestones which must be met throughout the project. This 
 	The final report submission marks a point where all work on the project has to be complete. 
 \end{enumerate}
 
+\subsection{Original Schedule}
+The original schedule was created at the start of the project, after the Aims \& Objectives had been created. At this stage it was left intentionally vague, as it was anticipated that more information would become available as the initial stages of the project were completed. For example, there is time allocated for Experiment Implementation and Additional Requirements, rather than actual individual experiments or work required to complete specific additional requirements.
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+	vgrid,
+	hgrid,
+	]{1}{16}
+	\gantttitle{Project Schedule (weeks)}{16} \\
+	\gantttitlelist{1,...,16}{1} \\
+	\ganttgroup{Background Research}{1}{6} \\
+	\ganttbar{Aims \& Objectives}{1}{1} \\
+	\ganttbar{Literature Review}{2}{4} \\
+	\ganttmilestone{Presentation to Distributed Systems Group}{4} \\
+	\ganttgroup{Experiment Implementation}{6}{13} \\
+	\ganttbar{Experiment Prototypes}{3}{5} \\
+	\ganttmilestone{Mid Project Report}{6} \\
+	\ganttbar{Configure Cluster}{6}{7} \\
+	\ganttbar{Experiment Implementation}{7}{11} \\
+	\ganttbar{Additional Requirements}{11}{13} \\
+	\ganttmilestone{Progress Meeting}{13} \\
+	\ganttgroup{Evaluation}{13}{15} \\
+	\ganttbar{Evaluation}{13}{14} \\
+	\ganttbar{Project Write-up}{14}{16} \\
+	\ganttmilestone{Deadline}{16}
+\end{ganttchart}
+\caption{Gantt Chart of Original Project Schedule}
+\label{originalGantt}
+\end{figure}
+
+\subsection{Modified Schedule}
+The modified schedule was created after the presentation to the distributed systems research group. At this point a sufficient amount of background research had been completed to complete a more comprehensive project plan. At this point the Project Tasks had been determined. 
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+	vgrid,
+	hgrid,
+	y unit chart=.9cm
+	]{1}{16}
+	\gantttitle{Project Schedule (weeks)}{16} \\
+	\gantttitlelist{1,...,16}{1} \\
+	\ganttbar{Aims \& Objectives}{1}{1} \\
+	\ganttbar{Literature Review}{2}{4} \\
+	\ganttmilestone{Choose Experiments}{4} \\
+	\ganttbar{Acquire Data}{4}{5} \\
+	\ganttbar{Prototype Locally}{4}{5} \\
+	\ganttbar{Write Mid Project Report}{5}{6} \\
+	\ganttmilestone{Mid Project Report}{6} \\
+	\ganttbar{Configure Cluster}{6}{7} \\
+	\ganttmilestone{Cluster Prepared}{7} \\
+	\ganttbar{Run MapReduce Experiment}{7}{8} \\
+	\ganttbar{Run Non-MapReduce Experiment}{8}{10} \\
+	\ganttbar{Run Real World Experiment}{10}{12} \\
+	\ganttbar{Initial Evaluation}{12}{13} \\
+	\ganttmilestone{Progress Meeting}{13} \\
+	\ganttbar{Further Evaluation}{13}{14} \\
+	\ganttbar{Project Write-up}{14}{16} \\
+	\ganttmilestone{Deadline}{16}
+\end{ganttchart}
+\caption{Gantt Chart of Modified Project Schedule}
+\label{modifiedGantt}
+\end{figure}
+
 \section{Deliverables}
-The project will deliver 2 things.
+The project will deliver the following:
 
 \begin{enumerate}
 	\item An evaluation of the efficiency of Hadoop and Stratosphere in various data processing situations
 	\item Code for experiments, designed to test the efficiency of Hadoop and Stratosphere
+	\item If the extended requirements are met, a contribution to the research landscape by considering novel problems, evaluating the scalability of the data processing tools and comparing their implementation in public and private cloud environments.
 \end{enumerate}
