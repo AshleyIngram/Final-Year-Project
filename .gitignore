@@ -44,3 +44,6 @@ project/plugins/project/
 *.iml
 *.iws
 *.jar
+
+# Chart artifacts
+report/resources/*.pdf
