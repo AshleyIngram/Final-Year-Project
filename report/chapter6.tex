@@ -123,13 +123,21 @@ The work carried out in this project is intended to contribute to the existing l
 \end{enumerate}
 
 \subsection{Future Work}
-\todo{Bullet Points!}
 There are a number of possible extensions to the project which could be tackled as future work.
 
-A particular area which was identified as an extended goal of the project was to look at the performance of the data processing tools in a public cloud environment. In particular, this work could look at the impact of the unique method in which Stratosphere can acquire resources rather than processing data on a fixed cluster size, and how this approach effects performance and scalability. The cost of public clouds, and whether the choice of data processing tool can reduce cost could also be an area of research.
+\begin{enumerate}
 
+\item Evaluate the performance of data processing technologies on a public cloud
+A particular area which was identified as an extended goal of the project was to look at the performance of the data processing tools in a public cloud environment. In particular, this work could look at the impact of the unique method in which Stratosphere can acquire resources rather than processing data on a fixed cluster size, and how this approach effects performance and scalability. 
+
+\item Evaluate the cost of Cloud Computing in Big Data scenarios
+As an extension of evaluating the technologies in public cloud scenarios would be to look at the cost of clouds in comparison to on-premise data centres, and whether the choice of data processing tool can have a financial impact.
+
+\item A comparison of Platform as a Service and Infrastructure as a Service for Big Data processing
 Various cloud providers offer hosted Platform as a Service data processing tools (typically Hadoop) which allow users to process data without worrying about manually configuring a cluster. A possible extension to this work would be to consider how this effects the performance of data processing tasks, and whether the elasticity afforded by a Platform of a Service approach is appropriate for data processing scenarios. 
 
-An alternative direction would be to look at other, more specialised data processing tools which are designed to process certain types of data (for example, large scale graph processing tools). 
+\item Alternative data processing technologies
+An alternative direction would be to look at other, more specialised data processing tools which are designed to process certain types of data. MapReduce can be viewed as a specialised version of PACT which is suited to a particular type of problem. There are data processing tools designed for other tasks, such as large scale graph processing (Giraph). Further research could determine whether Stratosphere performs better than other specialised tools in relevant scenarios.
+\end{enumerate}
 
 \todo{Full conclusion chapter}
