@@ -62,12 +62,12 @@ The stated aim of the project was to provide a reasoned and objective analysis o
 \subsection{Minimum Requirements}
 \begin{itemize}
 	\item Install Hadoop
-	\todo{More?}
-	Hadoop was installed on the Cloud Testbed.
+
+	Hadoop was installed on the Cloud Testbed. This required a new image, and the latest version of Hadoop was installed from scratch. There was an existing image with an older version of Hadoop, but it was felt that the latest version was required for the project.
 
 	\item Install Stratosphere
-	\todo{More here too?}
-	Stratosphere was installed on the Cloud Testbed.
+
+	Stratosphere was installed on the Cloud Testbed. The non-YARN dependant version was installed so that the scheduling systems (which play a role in scalability) can be compared, rather than both Hadoop and Stratosphere running on YARN. The latest version of Stratosphere was installed.
 
 	\item Run a MapReduce processing task
 
