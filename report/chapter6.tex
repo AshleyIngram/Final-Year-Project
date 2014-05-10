@@ -107,7 +107,27 @@ Specifically, there are two core Nephele papers which have previously studied th
 
 The experiments carried out in this project support the performance findings of the previous work, finding that Stratosphere outperforms Hadoop in cases of both MapReduce and non-MapReduce problems, with MapReduce being particularly poor when considering iterative problems.
 
-\todo{Table of comparison (here or in contribution?)}
+\begin{figure}
+\centering
+\begin{tabular}{l|lll}
+	\toprule
+	Criteria & \cite{warneke2011exploiting} & \cite{battre2010socc} & This Report \\
+	\hline
+	Data Processing Technologies & Hadoop,  & Hadoop, & Hadoop, \\
+	& Stratosphere (PACT), & Stratosphere (PACT), & Stratosphere (PACT), \\
+	& Stratosphere (MR) & Stratosphere (MR) & Stratosphere (MR) \\
+	\hline
+	MapReduce Problem & Joins & Sorting & Reverse Link Graph \\
+	\hline
+	Non-MapReduce Problem & K-Means & Sorting & PageRank \\
+	\hline
+	Data Size & 200GB & 100GB & 3GB \\
+	\hline
+	Number of Nodes & 12 & 20 & 2, 4, 6, 8, 10 \\
+	\bottomrule
+\end{tabular}
+\caption{Comparison to previous research}
+\end{figure}
 
 \subsubsection{Contribution to Research}
 The work carried out in this project is intended to contribute to the existing landscape by building on the work of previous research. This project attempts to contribute to the existing body of research in the following ways
