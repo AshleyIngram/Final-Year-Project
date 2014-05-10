@@ -176,12 +176,52 @@ This imposes limitations on the types of problem which can be solved by MapReduc
 Prominent examples of this type of algorithm can be found in Machine Learning, where problems are often iterative in nature. Iterative tasks, such as K-Means Clustering can be implemented using the MapReduce paradigm \cite{zhao2009parallel}, but often require multiple passes of the \textit{map} and \textit{reduce} functions, which causes a significant performance penalty as data must be loaded from the disk every iteration.
 
 \subsection{Hadoop}
+Hadoop is an Open Source project which develops software for large scale distributed data processing \cite{hadoop}. There are various components of the Hadoop project. The experiments performed later in the project will use the term Hadoop to refer to the Hadoop MapReduce component, and will refer to other components (such as YARN and HDFS) by name. 
 
-\todo{Hadoop Architecture Diagram}
-\todo{More discussion of YARN/HDFS?}
-Hadoop is an Open Source implementation of the MapReduce programming paradigm \cite{hadoop}. It consists of several modules designed to overcome the problems associated with large scale data processing. In addition to the MapReduce programming model (Hadoop MapReduce), the Hadoop platform also has a distributed file system (HDFS) and a resource management and scheduling component (Hadoop YARN). 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+block/.style={
+  draw,
+  node distance=3pt,
+  outer sep=0pt,
+  rounded corners,
+  text width=2.5cm,
+  align=center,
+  minimum width=9cm,
+  text height=12pt,
+  text depth=9pt}]
 
-Hadoop is a particularly popular implementation of the MapReduce interface in the data processing community, emerging as the de-facto standard implementation of MapReduce \cite{qin2013reflection}.
+\node[block, solid, minimum width=2.5cm](MR){MapReduce};
+\node[block, solid, right=of MR, minimum width=2.5cm](PIG){Pig};
+\node[block, solid, right=of PIG, minimum width=2.5cm](HIVE){Hive};
+
+\node[draw, fit=(MR) (PIG) (HIVE), dashed, rounded corners, minimum width=9cm](container){};
+
+\node[right=of container] {Data Processing Tools};
+\node[block, below=of container](YARN){YARN};
+\node[right=of YARN]{Cluster Management};
+\node[block, below=of YARN](HDFS){HDFS};
+\node[right=of HDFS] {Storage};
+
+\end{tikzpicture}
+\caption{Basic Hadoop Architecture Diagram}
+\end{figure}
+
+\subsubsection{Hadoop MapReduce}
+The MapReduce component of Hadoop performs the data processing. It implements the MapReduce idea originally developed by Google \cite{dean2004mapreduce}. Applications are written as a combination of Map and Reduce operations, and the Hadoop MapReduce runtime performs these tasks across the data set.
+
+The Hadoop MapReduce component has emerged as the standard implementation of the MapReduce paradigm, and the de-facto method of processing large amounts of data \cite{qin2013reflection}.  
+
+\subsubsection{HDFS}
+The Hadoop Distributed File System (HDFS) is a file system designed to distribute its contents across a range of commodity machines \cite{borthakur2007hadoop}. The presence of a distributed file system is a key part in processing large amounts of data, as it is infeasible to store petabytes of data on one machine. HDFS stores data across multiple machines, and is designed to be fault tolerant by replicating data, so no information is lost if hardware fails. 
+
+The Hadoop Distributed File System was inspired by the Google File System \cite{ghemawat2003google}.
+
+\subsubsection{YARN}
+Hadoop YARN (Yet Another Resource Negotiator) is a relatively recent addition to the Hadoop project. YARN is a scheduler and resource negotiation system, allocating tasks to machines on the cluster based on their resources. Resources are represented as an abstract 'container` which has information about the resources of each machine (memory, CPU, etc). Each machine can hold more than one container, and work is assigned on a per-container basis. YARN is also responsible for handling job submission. 
+
+The key role that YARN plays in the Hadoop architecture is decoupling the job management and task allocation components from the actual data processing component. This allows new data processing frameworks to be created to replace Hadoop MapReduce, whilst still benefiting from the scheduling and resource allocation components of the Hadoop project, which are well tested methods of distributing the workload of data processing tasks.
 
 \section{PACTs}
 \textbf{Pa}rallelization \textbf{C}ontrac\textbf{t}s (PACTs) is an alternative programming paradigm which is a generalization of the MapReduce concept \cite{battre2010socc}. The aim of PACT is to overcome the perceived weaknesses in the MapReduce paradigm, whilst still providing a generic enough framework to represent any data processing task. PACT sets out to improve MapReduce by observing that the \textit{map} and \textit{reduce} functions alone cannot represent all data processing tasks in a natural or efficient way, that MapReduce does not provide flexibility in the order of operations (strictly a \textit{map} followed by a \textit{reduce}) and that MapReduce makes no assumption about the user defined functions, limiting the scope of potential optimizations.
@@ -238,12 +278,53 @@ The classic MapReduce paradigm could be emulated by having 2 tasks, one with the
 
 \subsection{Stratosphere}
 
-\todo{Stratosphere Architecture Diagram}
 Stratosphere is the reference implementation of the PACT programming model. It is a runtime environment which takes a Directed Acyclic Graph specifying the desired data processing workflow (the Job Graph) and and compiles it in to an Execution Graph - a more concrete description with information about how the tasks will be made parallel and what types of computing resources will be used \cite{warneke2011exploiting}. 
 
 A secondary focus of the Stratosphere runtime is to take advantage of the opportunities afforded by Cloud Computing. The core benefit of Cloud Computing is elasticity, allowing resources to be obtained on demand. By removing the assumption that resources must be static throughout the duration of a data processing job, Stratosphere is able to utilise the dynamic resource allocation made possible by the cloud. This changes the emphasis of task scheduling, allowing the scheduler to determine and acquire what resources a given task needs, rather than attempting to schedule tasks depending on the resources available at the time \cite{warneke2011exploiting}.
 
+The Stratosphere implementation of PACT can use some of the components of the Hadoop project. Rather than create a distributed file system from scratch, Stratosphere can use HDFS. It can also use YARN to manage the cluster, so Stratosphere jobs can be executed on existing Hadoop clusters.
+
 Stratosphere was previously known as Nephele, and research papers from the beginning of the Stratosphere project will refer to it by this name.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+block/.style={
+  draw,
+  node distance=3pt,
+  outer sep=0pt,
+  rounded corners,
+  text width=2.5cm,
+  align=center,
+  minimum width=9cm,
+  text height=12pt,
+  text depth=9pt}]
+
+\node[block, solid, minimum width=2.5cm](JavaAPI){Java API};
+\node[block, solid, right=of JavaAPI, minimum width=2.5cm](ScalaAPI){Scala API};
+\node[block, solid, right=of ScalaAPI, minimum width=2.5cm](Meteor){Meteor};
+
+\node[draw, fit=(JavaAPI) (ScalaAPI) (Meteor), dashed, rounded corners, minimum width=9cm](container1){};
+
+\node[right=of container1] {Client API's};
+\node[block, below=of container1](Optimizer){Optimizer};
+\node[block, below=of Optimizer](Runtime){Runtime};
+
+\node[block, solid, minimum width=2.5cm, below=of Runtime, yshift=-1.5mm](Direct) {Direct};
+\node[block, solid, minimum width=2.5cm, left=of Direct](YARN) {YARN};
+\node[block, solid, minimum width=2.5cm, right=of Direct](EC2) {EC2};
+\node[draw, fit=(YARN) (Direct) (EC2), dashed, rounded corners, minimum width=9cm](container2) {};
+\node[right=of container2] {Cluster Manager};
+
+\node[block, solid, minimum width=2.5cm, below=of container2, yshift=-1.5mm](HDFS) {HDFS};
+\node[block, solid, minimum width=2.5cm, left=of HDFS](Local) {Local};
+\node[block, solid, minimum width=2.5cm, right=of HDFS](S3) {S3};
+\node[draw, fit=(Local) (HDFS) (S3), dashed, rounded corners, minimum width=9cm](container3) {};
+\node[right=of container3] {Storage};
+
+\end{tikzpicture}
+\caption{Stratosphere Architecture Diagram}
+\end{figure}
 
 %\section{Alternative Technologies}
 %There are various alternative data processing technologies which will not be considered in any more detail in this project. 
