@@ -14,43 +14,39 @@ Agile development provided a framework for adjusting the schedule throughout the
 \subsection{Schedule Adjustments}
 Various adjustments were made to the schedule to ensure that the project was completed on time. Initially, the project was fairly ambitious in scope. Unfortunately, because of time constraints not all of the extended requirements could be met. Carrying work out in an iterative manner was key to the ability to remove work from the schedule (thereby ensuring the project could complete on time) whilst ensuring the minimum requirements were still met.
 
-\todo{Change to be adjusted from modified gantt chart}
 \begin{figure}[H]
 \centering
 \begin{ganttchart}[
 	vgrid,
 	hgrid,
+	y unit chart=.9cm
 	]{1}{16}
 	\gantttitle{Project Schedule (weeks)}{16} \\
 	\gantttitlelist{1,...,16}{1} \\
-	\ganttgroup{Background Research}{1}{5} \\
 	\ganttbar{Aims \& Objectives}{1}{1} \\
 	\ganttbar{Literature Review}{2}{5} \\
-	\ganttmilestone{Presentation to Distributed Systems Group}{4} \\
-	\ganttbar{Experiment Prototypes}{4}{5} \\
+	\ganttmilestone{Choose Experiments}{4} \\
+	\ganttbar{Acquire Data}{4}{5} \\
+	\ganttbar{Prototype Locally}{4}{5} \\
+	\ganttbar{Write Mid Project Report}{5}{6} \\
 	\ganttmilestone{Mid Project Report}{6} \\
-	\ganttgroup{Experiment Implementation}{6}{13} \\
 	\ganttbar{Configure Cluster}{6}{10} \\
-	\ganttbar{Data Acquisition}{7}{9} \\
-	\ganttbar{Reverse Link Graph Development}{8}{9} \\
-	\ganttbar{PageRank Development}{10}{11} \\
-	\ganttbar{Run Experiments}{11}{14} \\
+	\ganttmilestone{Cluster Prepared}{10} \\
+	\ganttbar{Run Reverse Link Graph Experiment}{10}{12} \\
+	\ganttbar{Evaluate Reverse Link Graph}{13}{13} \\
 	\ganttmilestone{Progress Meeting}{13} \\
-	\ganttgroup{Evaluation}{13}{15} \\
-	\ganttbar{Evaluation}{13}{15} \\
-	\ganttbar{Report Write-up}{14}{15} \\
-	\ganttbar{Proof Reading \& Adjustments}{16}{16} \\
+	\ganttbar{Run PageRank Experiment}{12}{14} \\
+	\ganttbar{PageRank Evaluation}{14}{14} \\
+	\ganttbar{Project Write-up}{13}{16} \\
 	\ganttmilestone{Deadline}{16}
 \end{ganttchart}
 \caption{Final Gantt Chart of Project Schedule}
-\label{endGantt}
+\label{modifiedGantt}
 \end{figure}
 
 In comparison to the initial project estimation, setting up the cluster of machines took much longer than expected. It was expected that Hadoop and Stratosphere would be pre-installed on the Cloud Testbed, but this was not the case for Stratosphere, and Hadoop had an outdated version. The process of installing and configuring the software took longer than expected, leading to the cluster set-up to take 4 weeks, rather than the week originally predicted.
 
-In order to compensate for this, the data required for the experiments was acquired and pre-processed as the cluster was being configured. As stages in these tasks were passive (e.g. waiting for large amounts of data to download) these tasks could be performed in parallel efficiently. 
-
-Rather than performing the experiments required for the minimum requirements (e.g. Word Count or Terasort), more complex experiments were developed to better reflect the real-world usage of the data processing tools. This met an additional requirement (in addition to the minimum requirements). Implementing the more complex experiments directly and not performing the basic experiments was a more efficient use of time, with more value being gained from the advanced experiments, and time not being spent on performing the simpler experiments. 
+In order to compensate for this, rather than performing the experiments required for the minimum requirements (e.g. Word Count or Terasort), more complex experiments were developed to better reflect the real-world usage of the data processing tools. This met an additional requirement (in addition to the minimum requirements). Implementing the more complex experiments directly and not performing the basic experiments was a more efficient use of time, with more value being gained from the advanced experiments, and time not being spent on performing the simpler experiments. 
 
 Experiments could be run in parallel to the evaluation and write-up stages, as experiments (particularly Hadoop PageRank) often took a large amount of time to finish without requiring any supervision. This left time to write up various aspects of the report, and evaluate experiments which had already been completed (for example, evaluating the results of the Reverse Link Graph experiments as PageRank was running).
 
