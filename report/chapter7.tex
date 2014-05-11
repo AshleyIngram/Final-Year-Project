@@ -1,0 +1,25 @@
+\chapter{Project Conclusion}
+\centerline{\rule{149mm}{.02in}}
+\vspace{2cm}
+
+The aim of this project was to carry out a objective performance analysis of the tools available for processing large amounts of data in parallel. Specifically the current standard data processing technology (the Hadoop implementation of the MapReduce paradigm) was compared with a newer, more research led effort (the Stratosphere implementation of the PACT programming paradigm). At the beginning of the project, three research goals were identified to meet this aim.
+
+\begin{itemize}
+	\item Does PACT overcome the inherent disadvantages of the MapReduce paradigm?
+	\item How well does Stratosphere perform MapReduce tasks?
+	\item How do Hadoop and Stratosphere perform in a highly elastic Cloud Computing environment?
+\end{itemize}  
+
+The research goals were met by deriving a series of experiments. 
+
+In order to determine how well PACT overcomes the inherent disadvantages of MapReduce, both tools calculated the PageRank of a set of Wikipedia articles. This tested the ability of the tools to perform iterative algorithms (a known issue with the MapReduce paradigm), and to perform multiple operations per iteration (joining the data and then computing the PageRank). 
+
+The second experiment determined how well Stratosphere could perform MapReduce tasks, by finding the Reverse Link Graph of a set of Wikipedia articles. This is a problem naturally applicable to MapReduce and therefore well suited to Hadoop.
+
+Finally, each experiment was executed on a number of different cluster sizes, and the results compared to determine the scalability of each of the systems.
+
+The results of the first two experiments overwhelmingly showed that Stratosphere performed better than Hadoop in cases where a task can be simply formulated as a MapReduce problem, and those where it cannot. In particular, there are significant performance enhancements in iterative scenarios.
+
+The experiments also determined that both tools scale in a near-linear fashion. 
+
+These results are replicated in previous work in the research area. This project has contributed to the existing research by running novel problems, analysing the scalability of the tools, and replicating results on up-to-date versions of the software. 
