@@ -235,3 +235,6 @@ The initial process of converting the input data to the necessary format by perf
 For each iteration of the algorithm, a Map and Reduce operation was required to join the node with its edges. A further MapReduce step was required to compute the updated rank for the page (as with Stratosphere). A final MapReduce step was taken to format the data in an appropriate format for the next iteration, a step taken automatically by Stratosphere.
 
 It took a total of 10 MapReduce passes to compute the PageRank over 3 iterations.
+
+\section{Conclusion}
+This chapter has detailed the implementation concerns of the experiments. We have determined the data to be used, the runtime environment of the experiments, and the relevant data processing tool configurations. A description of the Reverse Link Graph and PageRank implementations has been given, and implementation concerns such as data format, node counts, and programming languages and frameworks used have been discussed.

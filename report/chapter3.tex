@@ -115,3 +115,6 @@ It would be unrealistic to expect the tools to scale in a perfectly linear manne
 One major cause of scalability issues in parallel computing can be the underlying file system. Communicating to disk is expensive, and will be even more so if a node has to communicate over the network to get access to the file system. The file system implementation may therefore play a key role in determining the scalability of the system. An inferior file system implementation may lead to more network communication, significantly negatively impacting the runtime of a processing task. As both Stratosphere and Hadoop use the Hadoop Distributed File System, this discrepancy will not be an issue when assessing the relative scalability of the two systems.
 
 Based on this analysis, it can be expected that Stratosphere and Hadoop will not show any major differences in scalability, with both scaling in a near-linear fashion.
+
+\section{Conclusion}
+A series of experiments have been designed to answer the key research questions determined at the start of the project. The experiments have been designed to test the performance of both Hadoop and Stratosphere in performing MapReduce and non-MapReduce tasks. The scalability of the systems will also be analysed. Specifically, both tools will compute the Reverse Link Graph and PageRank of a set of data. 

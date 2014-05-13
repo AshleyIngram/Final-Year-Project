@@ -219,7 +219,7 @@ The Hadoop Distributed File System (HDFS) is a file system designed to distribut
 The Hadoop Distributed File System was inspired by the Google File System \cite{ghemawat2003google}.
 
 \subsubsection{YARN}
-Hadoop YARN (Yet Another Resource Negotiator) is a relatively recent addition to the Hadoop project. YARN is a scheduler and resource negotiation system, allocating tasks to machines on the cluster based on their resources. Resources are represented as an abstract 'container` which has information about the resources of each machine (memory, CPU, etc). Each machine can hold more than one container, and work is assigned on a per-container basis. YARN is also responsible for handling job submission. 
+Hadoop YARN (Yet Another Resource Negotiator) is a relatively recent addition to the Hadoop project \ref{YARN}. YARN is a scheduler and resource negotiation system, allocating tasks to machines on the cluster based on their resources. Resources are represented as an abstract 'container` which has information about the resources of each machine (memory, CPU, etc). Each machine can hold more than one container, and work is assigned on a per-container basis. YARN is also responsible for handling job submission. 
 
 The key role that YARN plays in the Hadoop architecture is decoupling the job management and task allocation components from the actual data processing component. This allows new data processing frameworks to be created to replace Hadoop MapReduce, whilst still benefiting from the scheduling and resource allocation components of the Hadoop project, which are well tested methods of distributing the workload of data processing tasks.
 
@@ -335,3 +335,8 @@ block/.style={
 %\subsection{Dryad}
 
 %\section{Summary}
+
+\section{Conclusion}
+In this chapter we have discussed the key ideas and technologies which underpin the original research which is being performed in this project. The current Cloud Computing environment has been summarised, the issues behind Big Data have been discussed, and Hadoop and Stratosphere (and their related programming paradigms) have been summarised. 
+
+The background research provides the theoretical basis for the design of the experiments, which are described in the next chapter. 
